@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="icon" href="/budget.svg">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Money </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              'sans': ['DM Sans', 'system-ui', 'sans-serif'],
+              'display': ['DM Serif Display', 'serif'],
+            },
+            colors: {
+              primary: {
+                50: '#ecfdf5',
+                100: '#d1fae5',
+                200: '#a7f3d0',
+                300: '#6ee7b7',
+                400: '#34d399',
+                500: '#10b981',
+                600: '#059669',
+                700: '#047857',
+                800: '#065f46',
+                900: '#064e3b',
+              },
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.4s ease-out',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #e5e7eb;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #9ca3af;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
+      }
+      
+      .dark ::-webkit-scrollbar-track {
+        background: #1f2937;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #4b5563;
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
+      }
+      
+      /* Progress bar styles */
+      .progress-bar {
+        width: 100%;
+        height: 6px;
+        background-color: #e5e7eb;
+        border-radius: 9999px;
+        overflow: hidden;
+      }
+      .dark .progress-bar {
+        background-color: #374151;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 9999px;
+        transition: width 0.6s ease;
+      }
+      
+      /* Card hover effect */
+      .card-hover {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      .dark .card-hover:hover {
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+      }
+      
+      /* Hide scrollbar */
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      /* Animation */
+      .animate-fadeIn {
+        animation: fadeIn 0.4s ease-out;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      /* Table styles for compatibility */
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .table th {
+        text-align: left;
+        padding: 0.75rem 1rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #6b7280;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .dark .table th {
+        color: #9ca3af;
+        border-bottom-color: #374151;
+      }
+      .table td {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+        color: #1f2937;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .dark .table td {
+        color: #e5e7eb;
+        border-bottom-color: #374151;
+      }
+      
+      /* Input styles */
+      .input {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        background-color: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        color: #1f2937;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+      }
+      .dark .input {
+        background-color: #1f2937;
+        border-color: #374151;
+        color: #f3f4f6;
+      }
+      .input:focus {
+        outline: none;
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+      }
+      .input-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+        color: #6b7280;
+      }
+      .dark .input-label {
+        color: #9ca3af;
+      }
+      
+      /* Badge styles */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.125rem 0.5rem;
+        font-size: 0.625rem;
+        font-weight: 600;
+        border-radius: 9999px;
+        letter-spacing: 0.025em;
+      }
+      .badge-green {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+      }
+      .badge-red {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      .badge-gold {
+        background-color: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+      }
+      
+      /* Button styles */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border-radius: 0.5rem;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+      }
+      .btn-primary {
+        background-color: #10b981;
+        color: white;
+      }
+      .btn-primary:hover {
+        background-color: #059669;
+      }
+      .btn-ghost {
+        background-color: transparent;
+        color: #374151;
+        border: 1px solid #e5e7eb;
+      }
+      .dark .btn-ghost {
+        color: #d1d5db;
+        border-color: #374151;
+      }
+      .btn-ghost:hover {
+        background-color: #f3f4f6;
+      }
+      .dark .btn-ghost:hover {
+        background-color: #374151;
+      }
+      
+      /* Card styles */
+      .card {
+        background-color: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+        transition: all 0.2s;
+      }
+      .dark .card {
+        background-color: #1f2937;
+        border-color: #374151;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
