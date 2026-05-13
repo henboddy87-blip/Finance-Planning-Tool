@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
+import { ArrowUp, X } from 'lucide-react'
 import PageHeader from '../components/PageHeader.jsx'
 import { fmt } from '../utils/format.js'
 import { useToast } from '../context/AppContext.jsx'
@@ -93,7 +94,7 @@ export default function NetWorth() {
         <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-900/20 dark:to-emerald-900/5 backdrop-blur-sm rounded-xl border border-emerald-200 dark:border-emerald-500/30 p-5 transition-all hover:scale-[1.02] duration-200">
           <div className="text-xs font-semibold uppercase tracking-wider text-emerald-600 dark:text-gray-400 mb-2">Net Worth</div>
           <div className="text-2xl md:text-3xl font-bold text-emerald-700 dark:text-emerald-400">{fmt(netWorth)}</div>
-          <div className="text-xs text-emerald-600/70 dark:text-gray-500 mt-2">↑ {fmt(36800)} this year</div>
+          <div className="text-xs text-emerald-600/70 dark:text-gray-500 mt-2 flex items-center gap-1"><ArrowUp className="w-3 h-3" /> {fmt(36800)} this year</div>
         </div>
         
         <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 p-5 transition-all hover:scale-[1.02] duration-200">
@@ -238,7 +239,7 @@ export default function NetWorth() {
                         onClick={() => { setAssets(prev => prev.filter(x => x.id !== a.id)); toast.success('Deleted', 'Asset removed.') }} 
                         className="text-gray-400 hover:text-rose-500 dark:text-gray-500 dark:hover:text-rose-400 transition-colors"
                       >
-                        ✕
+                        <X className="w-4 h-4" />
                       </button>
                     </td>
                   </tr>
@@ -279,7 +280,7 @@ export default function NetWorth() {
                         onClick={() => { setLiabilities(prev => prev.filter(x => x.id !== l.id)); toast.success('Deleted', 'Liability removed.') }} 
                         className="text-gray-400 hover:text-rose-500 dark:text-gray-500 dark:hover:text-rose-400 transition-colors"
                       >
-                        ✕
+                        <X className="w-4 h-4" />
                       </button>
                     </td>
                   </tr>

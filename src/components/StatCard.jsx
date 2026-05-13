@@ -44,7 +44,7 @@ export default function StatCard({
       />
 
       <div className="flex justify-between items-start mb-3">
-        <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+        <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 truncate">
           {label}
         </span>
         {icon && (
@@ -55,7 +55,8 @@ export default function StatCard({
       </div>
 
       <div
-        className={`font-display text-2xl md:text-3xl font-bold ${textColor} mb-2 leading-tight`}
+        className={`font-display text-xl sm:text-2xl lg:text-3xl font-bold ${textColor} mb-2 leading-tight truncate`}
+        title={value}
       >
         {value}
       </div>

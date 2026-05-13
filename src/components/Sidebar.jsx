@@ -4,7 +4,7 @@ import {
   LayoutDashboard, CircleDollarSign, FileBarChart,
   PieChart, Zap, Building2, FileStack, Calculator,
   TrendingUp, CreditCard, CalendarDays, Receipt,
-  Users, Settings, Sun, Moon, ChevronsLeft
+  Users, Settings, Sun, Moon, ChevronsLeft, X
 } from 'lucide-react'
 
 const NAV_GROUPS = [
@@ -62,7 +62,8 @@ export default function Sidebar({ currentPage, onNavigate, isOpen, onToggle }) {
           </div>
         )}
         <button onClick={onToggle} className="ml-auto p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 transition-colors shrink-0">
-          <ChevronsLeft className={`w-4 h-4 transition-transform duration-300 ${!isOpen ? 'rotate-180' : ''}`} />
+          <X className="w-5 h-5 md:hidden" />
+          <ChevronsLeft className={`hidden md:block w-4 h-4 transition-transform duration-300 ${!isOpen ? 'rotate-180' : ''}`} />
         </button>
       </div>
 
@@ -146,7 +147,7 @@ export default function Sidebar({ currentPage, onNavigate, isOpen, onToggle }) {
               {user?.avatar ? <img src={user.avatar} alt="avatar" className="w-full h-full object-cover" /> : user?.initials || 'AJ'}
             </div>
             <div className="flex-1 min-w-0">
-              <div className="text-sm font-bold text-gray-800 dark:text-gray-100 truncate leading-tight">{user?.name || 'Alex Johnson'}</div>
+              <div className="text-sm font-bold text-gray-800 dark:text-gray-100 truncate leading-tight">{user?.name || 'Peter Son'}</div>
               <div className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 mt-0.5 uppercase tracking-wide">{user?.plan || 'Pro'} Member</div>
             </div>
           </div>

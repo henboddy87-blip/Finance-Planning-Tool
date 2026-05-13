@@ -6,7 +6,7 @@ import StatCard from '../components/StatCard.jsx'
 import { fmt, fmtFull } from '../utils/format.js'
 import { useToast } from '../context/AppContext.jsx'
 
-/* ── Mock Data ─────────────────────────────────────────── */
+// Connected Account
 const connectedAccounts = [
   { id: 1, bank: 'ABA Bank', type: 'Checking', last4: '4821', balance: 8247.33, currency: 'USD', status: 'active', synced: '2 min ago', logo: 'https://play-lh.googleusercontent.com/WU6sZMD1UspzwqYnlACtmN60rckp8hoINSgsR21mKLJBbsHPwXtzwvOocpjC7FcO1g', color: '#005b82' },
   { id: 2, bank: 'Canadia Bank', type: 'Savings', last4: '4822', balance: 19500.00, currency: 'USD', status: 'active', synced: '2 min ago', logo: 'https://play-lh.googleusercontent.com/neBoLmWSd3k5JBQhlM8GBFfREecG2ZZyZfao5zgr0koHOQvZL_HZkX_9LkkXABUmBK4', color: '#b91d22' },

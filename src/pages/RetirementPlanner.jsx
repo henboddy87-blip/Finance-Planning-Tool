@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { CheckCircle, CircleDollarSign, TrendingUp, Users, Calendar, SlidersHorizontal } from 'lucide-react'
+import { CheckCircle, CircleDollarSign, TrendingUp, Users, Calendar, SlidersHorizontal, Check, AlertTriangle } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
 import PageHeader from '../components/PageHeader.jsx'
 import { fmt } from '../utils/format.js'
@@ -80,7 +80,7 @@ export default function RetirementPlanner() {
               ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' 
               : 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400'
           }`}>
-            {onTrack ? '✓ On Track' : '⚠ Below Target'}
+            <div className="flex items-center gap-1">{onTrack ? <Check className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />} {onTrack ? 'On Track' : 'Below Target'}</div>
           </span>
         </div>
         

@@ -3,14 +3,14 @@ import { Shield, Home, GraduationCap, Plane, Plus, Trash2, Check, Target, Calend
 import { RadialBarChart, RadialBar, ResponsiveContainer, Tooltip } from 'recharts'
 import PageHeader from '../components/PageHeader.jsx'
 import { fmt } from '../utils/format.js'
-import { useToast } from '../context/AppContext.jsx'
+import { useToast, useLocalStorage } from '../context/AppContext.jsx'
 
 const initialGoals = [
-  { id: 1, name: 'Emergency Fund', target: 25000, current: 19500, monthly: 500, deadline: '2026-09', icon: '🛡️', color: '#2a7d4f', category: 'Safety' },
-  { id: 2, name: 'House Down Payment', target: 80000, current: 33600, monthly: 1200, deadline: '2028-06', icon: '🏠', color: '#c9a84c', category: 'Housing' },
-  { id: 3, name: 'Retirement (401k)', target: 1500000, current: 465000, monthly: 1800, deadline: '2045-01', icon: '🏖️', color: '#4c7dc9', category: 'Retirement' },
-  { id: 4, name: 'Dream Vacation', target: 8000, current: 3200, monthly: 300, deadline: '2026-12', icon: '✈️', color: '#c94c7d', category: 'Lifestyle' },
-  { id: 5, name: "Children's Education", target: 120000, current: 24000, monthly: 600, deadline: '2036-08', icon: '🎓', color: '#7d4cc9', category: 'Education' },
+  { id: 1, name: 'Emergency Fund', target: 25000, current: 19500, monthly: 500, deadline: '2026-09', color: '#2a7d4f', category: 'Safety' },
+  { id: 2, name: 'House Down Payment', target: 80000, current: 33600, monthly: 1200, deadline: '2028-06', color: '#c9a84c', category: 'Housing' },
+  { id: 3, name: 'Retirement (401k)', target: 1500000, current: 465000, monthly: 1800, deadline: '2045-01', color: '#4c7dc9', category: 'Retirement' },
+  { id: 4, name: 'Dream Vacation', target: 8000, current: 3200, monthly: 300, deadline: '2026-12', color: '#c94c7d', category: 'Lifestyle' },
+  { id: 5, name: "Children's Education", target: 120000, current: 24000, monthly: 600, deadline: '2036-08', color: '#7d4cc9', category: 'Education' },
 ]
 
 function monthsLeft(deadline) {
@@ -61,9 +61,9 @@ const Icons = {
 
 export default function GoalsTracker() {
   const toast = useToast()
-  const [goals, setGoals] = useState(initialGoals)
+  const [goals, setGoals] = useLocalStorage('wp_goals', initialGoals)
   const [showAdd, setShowAdd] = useState(false)
-  const [form, setForm] = useState({ name: '', target: '', current: '', monthly: '', deadline: '', category: 'Savings', icon: '🎯' })
+  const [form, setForm] = useState({ name: '', target: '', current: '', monthly: '', deadline: '', category: 'Savings' })
   const [selected, setSelected] = useState(null)
   const [contribution, setContribution] = useState('')
 
@@ -80,7 +80,7 @@ export default function GoalsTracker() {
       color: ['#2a7d4f','#c9a84c','#4c7dc9','#c94c7d','#7d4cc9'][prev.length % 5],
       category: form.category,
     }])
-    setForm({ name: '', target: '', current: '', monthly: '', deadline: '', category: 'Savings', icon: '🎯' })
+    setForm({ name: '', target: '', current: '', monthly: '', deadline: '', category: 'Savings' })
     setShowAdd(false)
     toast.success('Goal Created', `"${form.name}" has been added to your goals!`)
   }

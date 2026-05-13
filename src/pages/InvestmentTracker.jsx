@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Plus, Trash2, AlertTriangle } from 'lucide-react'
+import { Plus, Trash2, AlertTriangle, X } from 'lucide-react'
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -179,7 +179,7 @@ export default function InvestmentTracker() {
           <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 max-w-lg w-full animate-fadeIn shadow-2xl">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Add Holding</h3>
-              <button onClick={() => setShowAdd(false)} className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors text-xl">✕</button>
+              <button onClick={() => setShowAdd(false)} className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"><X className="w-5 h-5" /></button>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {[
@@ -501,7 +501,7 @@ export default function InvestmentTracker() {
                 <div className="text-xs font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider">Concentration Warning</div>
               </div>
               <div className="text-sm text-amber-600 dark:text-amber-400">
-                ⚠️ Technology sector represents {techConcentration}% of your portfolio. Consider diversifying to reduce concentration risk.
+                <AlertTriangle className="w-4 h-4 inline mr-1" /> Technology sector represents {techConcentration}% of your portfolio. Consider diversifying to reduce concentration risk.
               </div>
             </div>
           </div>

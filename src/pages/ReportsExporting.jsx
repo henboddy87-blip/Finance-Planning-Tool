@@ -3,7 +3,7 @@ import { FileText, File, Table, Code, Download, RefreshCw, Save, Edit2, Play, Lo
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from 'recharts'
 import PageHeader from '../components/PageHeader.jsx'
 import { fmt, fmtFull, COLORS } from '../utils/format.js'
-import { useToast } from '../context/AppContext.jsx'
+import { useToast, useLocalStorage } from '../context/AppContext.jsx'
 
 /* ── Dynamic Mock Data Generators ── */
 function generateDataForYear(yearStr) {
@@ -60,9 +60,9 @@ const CT = ({ active, payload, label }) => {
 
 /* ── Initial Templates ── */
 const initialCustomReports = [
-  { id: 1, name:'Monthly Budget Review',    icon:'📊', lastRun:'Apr 30', freq:'Monthly' },
-  { id: 2, name:'Annual Tax Summary',       icon:'📋', lastRun:'Apr 15', freq:'Yearly'  },
-  { id: 3, name:'Investment Performance',   icon:'📈', lastRun:'Apr 28', freq:'Weekly'  },
+  { id: 1, name:'Monthly Budget Review',    icon:'bar', lastRun:'Apr 30', freq:'Monthly' },
+  { id: 2, name:'Annual Tax Summary',       icon:'clipboard', lastRun:'Apr 15', freq:'Yearly'  },
+  { id: 3, name:'Investment Performance',   icon:'trending', lastRun:'Apr 28', freq:'Weekly'  },
 ]
 
 
@@ -77,6 +77,10 @@ const Icons = {
   Save: () => <Save className="w-4 h-4" />,
   Edit: () => <Edit2 className="w-3.5 h-3.5" />,
   Run: () => <Play className="w-3.5 h-3.5" />,
+  Bar: () => <BarChart2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
+  Clipboard: () => <List className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
+  Trending: () => <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />,
+  FileText: () => <FileText className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
 }
 
 /* ── Main ─────────────────────────────────────────────── */
@@ -87,7 +91,7 @@ export default function ReportsExporting() {
   const [reportMonth, setMonth] = useState('Apr')
   const [generating, setGen] = useState(null)
   
-  const [customReports, setCustomReports] = useState(initialCustomReports)
+  const [customReports, setCustomReports] = useLocalStorage('wp_custom_reports', initialCustomReports)
   const [customForm, setCustomForm] = useState({ name: '', type: 'Income Summary', range: 'This Month', groupBy: 'Category', format: 'PDF Report' })
 
   // Re-generate dynamic data whenever reportYear changes
@@ -513,7 +517,7 @@ export default function ReportsExporting() {
                     setCustomReports(prev => prev.map(r => r.name === customForm.name ? { ...r, ...customForm } : r))
                     toast.success('Updated', 'Template updated successfully.')
                   } else {
-                    setCustomReports(prev => [...prev, { id: Date.now(), name: customForm.name, icon: '📄', lastRun: 'Never', freq: 'On Demand', ...customForm }])
+                    setCustomReports(prev => [...prev, { id: Date.now(), name: customForm.name, icon: 'file', lastRun: 'Never', freq: 'On Demand', ...customForm }])
                     toast.success('Saved', 'Template saved successfully.')
                   }
                 }}

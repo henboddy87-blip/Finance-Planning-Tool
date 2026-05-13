@@ -216,17 +216,17 @@ export default function Calculators() {
             return (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm">
-                    <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500 mb-1">Monthly Payment</div>
-                    <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{fmtFull(result.payment || 0)}</div>
+                  <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm min-w-0">
+                    <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500 mb-1 truncate">Monthly Payment</div>
+                    <div className="text-xl lg:text-2xl xl:text-3xl font-bold text-emerald-600 dark:text-emerald-400 truncate" title={fmtFull(result.payment || 0)}>{fmtFull(result.payment || 0)}</div>
                   </div>
-                  <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm">
-                    <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500 mb-1">Total Interest</div>
-                    <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">{fmtFull(result.totalInterest || 0)}</div>
+                  <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm min-w-0">
+                    <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500 mb-1 truncate">Total Interest</div>
+                    <div className="text-xl lg:text-2xl xl:text-3xl font-bold text-amber-600 dark:text-amber-400 truncate" title={fmtFull(result.totalInterest || 0)}>{fmtFull(result.totalInterest || 0)}</div>
                   </div>
-                  <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm">
-                    <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500 mb-1">Total Payment</div>
-                    <div className="text-2xl font-bold text-gray-900 dark:text-white">{fmtFull((state.amount || 0) + (result.totalInterest || 0))}</div>
+                  <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm min-w-0">
+                    <div className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500 mb-1 truncate">Total Payment</div>
+                    <div className="text-xl lg:text-2xl xl:text-3xl font-bold text-gray-900 dark:text-white truncate" title={fmtFull((state.amount || 0) + (result.totalInterest || 0))}>{fmtFull((state.amount || 0) + (result.totalInterest || 0))}</div>
                   </div>
                 </div>
 

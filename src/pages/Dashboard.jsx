@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { ArrowUp, ArrowDown, Target, Settings, ChevronRight, Check, Diamond, PieChart as PieChartIcon } from 'lucide-react'
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -202,7 +203,7 @@ export default function Dashboard({ onNavigate }) {
             onClick={() => setShow(true)}
             className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           >
-            ⊞ Customize
+            <Settings className="w-4 h-4" /> Customize
           </button>
         </div>
       </div>
@@ -258,10 +259,10 @@ export default function Dashboard({ onNavigate }) {
       {/* KPI Stats */}
       {has('stats') && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <StatCard label="Net Worth" value={fmt(164800)} sub="all-time high" trend={3.2} color="emerald" icon="◈" />
-          <StatCard label="Monthly Income" value={fmt(8400)} sub="this month" trend={2.4} color="amber" icon="↑" />
-          <StatCard label="Monthly Expenses" value={fmt(5200)} sub="this month" trend={-1.8} color="rose" icon="↓" />
-          <StatCard label="Savings Rate" value={`${avgSR.toFixed(1)}%`} sub="6-month avg" trend={4.1} color="blue" icon="◎" />
+          <StatCard label="Net Worth" value={fmt(164800)} sub="all-time high" trend={3.2} color="emerald" icon={<Diamond className="w-5 h-5 text-emerald-500" />} />
+          <StatCard label="Monthly Income" value={fmt(8400)} sub="this month" trend={2.4} color="amber" icon={<ArrowUp className="w-5 h-5 text-amber-500" />} />
+          <StatCard label="Monthly Expenses" value={fmt(5200)} sub="this month" trend={-1.8} color="rose" icon={<ArrowDown className="w-5 h-5 text-rose-500" />} />
+          <StatCard label="Savings Rate" value={`${avgSR.toFixed(1)}%`} sub="6-month avg" trend={4.1} color="blue" icon={<Target className="w-5 h-5 text-blue-500" />} />
         </div>
       )}
 
@@ -362,13 +363,13 @@ export default function Dashboard({ onNavigate }) {
                     Net Worth Tracking
                   </div>
                   <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{fmt(164800)}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">↑ +{fmt(22800)} YTD · All-time high</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1"><ArrowUp className="w-3 h-3 text-emerald-500" /> +{fmt(22800)} YTD · All-time high</div>
                 </div>
                 <button 
                   onClick={() => onNavigate('networth')}
                   className="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                 >
-                  Details →
+                  Details <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
               <div className="grid grid-cols-2 gap-2 mb-4">
@@ -416,7 +417,7 @@ export default function Dashboard({ onNavigate }) {
                 <div className="flex items-center gap-3">
                   <span className="text-4xl font-bold text-emerald-600 dark:text-emerald-400">{avgSR.toFixed(1)}%</span>
                   <span className="px-2 py-1 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
-                    ↑ Healthy
+                    <ArrowUp className="w-3 h-3" /> Healthy
                   </span>
                 </div>
                 <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Recommended minimum: 20%</div>
@@ -426,7 +427,7 @@ export default function Dashboard({ onNavigate }) {
                   <div className="h-full bg-gradient-to-r from-amber-500 to-emerald-500 rounded-full transition-all" style={{ width: `${Math.min(avgSR, 100)}%` }} />
                 </div>
                 <div className="flex justify-between text-xs text-gray-500 dark:text-gray-500 mt-1">
-                  <span>0%</span><span className="text-amber-600 dark:text-amber-400">↑ 20% min</span><span>50%</span>
+                  <span>0%</span><span className="text-amber-600 dark:text-amber-400 flex items-center gap-1"><ArrowUp className="w-3 h-3" /> 20% min</span><span>50%</span>
                 </div>
               </div>
               <ResponsiveContainer width="100%" height={150}>
@@ -546,7 +547,7 @@ export default function Dashboard({ onNavigate }) {
                   onClick={() => onNavigate('budget')}
                   className="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                 >
-                  All →
+                  All <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
               <div className="space-y-3">
@@ -557,7 +558,7 @@ export default function Dashboard({ onNavigate }) {
                         tx.type === 'income' ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400' :
                         tx.type === 'invest' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400' : 'bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400'
                       }`}>
-                        {tx.type === 'income' ? '↑' : tx.type === 'invest' ? '◇' : '↓'}
+                        {tx.type === 'income' ? <ArrowUp className="w-4 h-4" /> : tx.type === 'invest' ? <PieChartIcon className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />}
                       </div>
                       <div>
                         <div className="text-sm text-gray-900 dark:text-gray-200">{tx.desc}</div>
@@ -584,7 +585,7 @@ export default function Dashboard({ onNavigate }) {
                   onClick={() => onNavigate('goals')}
                   className="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                 >
-                  All →
+                  All <ChevronRight className="w-3 h-3" />
                 </button>
               </div>
               <div className="space-y-4">

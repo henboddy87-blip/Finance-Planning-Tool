@@ -4,7 +4,7 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis
 import PageHeader from '../components/PageHeader.jsx'
 import StatCard from '../components/StatCard.jsx'
 import { fmt, fmtFull, COLORS } from '../utils/format.js'
-import { useToast } from '../context/AppContext.jsx'
+import { useToast, useLocalStorage } from '../context/AppContext.jsx'
 
 const initialCategories = [
   { id: 1, name: 'Housing', budgeted: 2000, spent: 1850, icon: 'Home', color: '#4c7dc9' },
@@ -54,7 +54,7 @@ const Icons = {
 
 export default function BudgetPlanner() {
   const toast = useToast()
-  const [categories, setCategories] = useState(initialCategories)
+  const [categories, setCategories] = useLocalStorage('wp_budget_cats', initialCategories)
   const [showAdd, setShowAdd] = useState(false)
   const [newCat, setNewCat] = useState({ name: '', budgeted: '' })
   const [editId, setEditId] = useState(null)
