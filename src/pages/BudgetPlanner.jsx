@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Plus, Trash2, Check, Home, Utensils, Car, HeartPulse, Film, ShoppingBag, Lightbulb, PiggyBank, Package } from 'lucide-react'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'
 import PageHeader from '../components/PageHeader.jsx'
 import StatCard from '../components/StatCard.jsx'
@@ -6,14 +7,14 @@ import { fmt, fmtFull, COLORS } from '../utils/format.js'
 import { useToast } from '../context/AppContext.jsx'
 
 const initialCategories = [
-  { id: 1, name: 'Housing', budgeted: 2000, spent: 1850, icon: '🏠', color: '#4c7dc9' },
-  { id: 2, name: 'Food & Dining', budgeted: 600, spent: 720, icon: '🍽️', color: '#c9a84c' },
-  { id: 3, name: 'Transportation', budgeted: 400, spent: 310, icon: '🚗', color: '#2a7d4f' },
-  { id: 4, name: 'Healthcare', budgeted: 200, spent: 145, icon: '⚕️', color: '#7d4cc9' },
-  { id: 5, name: 'Entertainment', budgeted: 250, spent: 310, icon: '🎬', color: '#c94c4c' },
-  { id: 6, name: 'Shopping', budgeted: 300, spent: 225, icon: '🛍️', color: '#c94c7d' },
-  { id: 7, name: 'Utilities', budgeted: 180, spent: 162, icon: '💡', color: '#4cc9c9' },
-  { id: 8, name: 'Savings/Invest', budgeted: 1500, spent: 1500, icon: '💰', color: '#7dc94c' },
+  { id: 1, name: 'Housing', budgeted: 2000, spent: 1850, icon: 'Home', color: '#4c7dc9' },
+  { id: 2, name: 'Food & Dining', budgeted: 600, spent: 720, icon: 'Utensils', color: '#c9a84c' },
+  { id: 3, name: 'Transportation', budgeted: 400, spent: 310, icon: 'Car', color: '#2a7d4f' },
+  { id: 4, name: 'Healthcare', budgeted: 200, spent: 145, icon: 'HeartPulse', color: '#7d4cc9' },
+  { id: 5, name: 'Entertainment', budgeted: 250, spent: 310, icon: 'Film', color: '#c94c4c' },
+  { id: 6, name: 'Shopping', budgeted: 300, spent: 225, icon: 'ShoppingBag', color: '#c94c7d' },
+  { id: 7, name: 'Utilities', budgeted: 180, spent: 162, icon: 'Lightbulb', color: '#4cc9c9' },
+  { id: 8, name: 'Savings/Invest', budgeted: 1500, spent: 1500, icon: 'PiggyBank', color: '#7dc94c' },
 ]
 
 const transactions = [
@@ -29,18 +30,25 @@ const transactions = [
   { desc: 'Gym Membership', cat: 'Healthcare', date: 'Apr 19', amount: 49.00 },
 ]
 
+
 // Professional icon components
 const Icons = {
-  Add: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>,
-  Delete: () => <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>,
-  Check: () => <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>,
+  Add: () => <Plus className="w-4 h-4" />,
+  Delete: () => <Trash2 className="w-3.5 h-3.5" />,
+  Check: () => <Check className="w-3.5 h-3.5" />,
   CategoryIcon: ({ name }) => {
+    const iconProps = { className: "w-4 h-4 text-gray-500 dark:text-gray-400" }
     const icons = {
-      'Housing': '🏠', 'Food & Dining': '🍽️', 'Transportation': '🚗', 
-      'Healthcare': '⚕️', 'Entertainment': '🎬', 'Shopping': '🛍️',
-      'Utilities': '💡', 'Savings/Invest': '💰'
+      'Housing': <Home {...iconProps} />,
+      'Food & Dining': <Utensils {...iconProps} />,
+      'Transportation': <Car {...iconProps} />, 
+      'Healthcare': <HeartPulse {...iconProps} />,
+      'Entertainment': <Film {...iconProps} />,
+      'Shopping': <ShoppingBag {...iconProps} />,
+      'Utilities': <Lightbulb {...iconProps} />,
+      'Savings/Invest': <PiggyBank {...iconProps} />
     }
-    return <span className="text-base">{icons[name] || '📦'}</span>
+    return icons[name] || <Package {...iconProps} />
   }
 }
 
@@ -66,7 +74,7 @@ export default function BudgetPlanner() {
       name: newCat.name,
       budgeted: parseFloat(newCat.budgeted),
       spent: 0,
-      icon: '📦',
+      icon: 'Package',
       color: COLORS[prev.length % COLORS.length],
     }])
     setNewCat({ name: '', budgeted: '' })

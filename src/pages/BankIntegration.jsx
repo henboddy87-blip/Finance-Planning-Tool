@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Plus, RefreshCw, ChevronRight, Unlink, X, Search, Lock, Shield, Eye, Link as LinkIcon, Wallet, CreditCard, Smartphone } from 'lucide-react'
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import PageHeader from '../components/PageHeader.jsx'
 import StatCard from '../components/StatCard.jsx'
@@ -7,11 +8,11 @@ import { useToast } from '../context/AppContext.jsx'
 
 /* ── Mock Data ─────────────────────────────────────────── */
 const connectedAccounts = [
-  { id: 1, bank: 'Chase Bank', type: 'Checking', last4: '4821', balance: 8247.33, currency: 'USD', status: 'active', synced: '2 min ago', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK12bmtfhc8ntoxm5lP1DRrLg_sdP6L5_ANg&s', color: '#1a6ebf' },
-  { id: 2, bank: 'Chase Bank', type: 'Savings', last4: '4822', balance: 19500.00, currency: 'USD', status: 'active', synced: '2 min ago', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK12bmtfhc8ntoxm5lP1DRrLg_sdP6L5_ANg&s', color: '#1a6ebf' },
-  { id: 3, bank: 'Bank of America', type: 'Credit Card', last4: '7731', balance: -4200.00, currency: 'USD', status: 'active', synced: '5 min ago', logo: 'https://media.bizj.us/view/img/11138963/new-bank-of-america-logo*1200xx3000-1688-0-356.jpg', color: '#e31837' },
-  { id: 4, bank: 'Fidelity', type: 'Brokerage', last4: '3309', balance: 122000.00, currency: 'USD', status: 'active', synced: '15 min ago', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbydsR6shIeXH6pyUjzIqc9QTHprLieyovDg&s' },
-  { id: 5, bank: 'Vanguard', type: '401(k)', last4: '8801', balance: 465000.00, currency: 'USD', status: 'active', synced: '1 hr ago', logo: 'https://logos-world.net/wp-content/uploads/2021/03/Vanguard-Emblem.png', color: '#8b1a1a' },
+  { id: 1, bank: 'ABA Bank', type: 'Checking', last4: '4821', balance: 8247.33, currency: 'USD', status: 'active', synced: '2 min ago', logo: 'https://play-lh.googleusercontent.com/WU6sZMD1UspzwqYnlACtmN60rckp8hoINSgsR21mKLJBbsHPwXtzwvOocpjC7FcO1g', color: '#005b82' },
+  { id: 2, bank: 'Canadia Bank', type: 'Savings', last4: '4822', balance: 19500.00, currency: 'USD', status: 'active', synced: '2 min ago', logo: 'https://play-lh.googleusercontent.com/neBoLmWSd3k5JBQhlM8GBFfREecG2ZZyZfao5zgr0koHOQvZL_HZkX_9LkkXABUmBK4', color: '#b91d22' },
+  { id: 3, bank: 'Aceleda Bank', type: 'Credit Card', last4: '7731', balance: -4200.00, currency: 'USD', status: 'active', synced: '5 min ago', logo: 'https://cccbic.org/businesses/430-logo.jpg', color: '#00478f' },
+  { id: 4, bank: 'Wing Bank', type: 'Checking', last4: '3309', balance: 12200.00, currency: 'USD', status: 'active', synced: '15 min ago', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMTnHfaEfTex5H6zVSUHv0SeW6NYrd3RsYlg&s', color: '#a0cd4a' },
+  { id: 5, bank: 'ChipMong Bank', type: 'Savings', last4: '8801', balance: 46500.00, currency: 'USD', status: 'active', synced: '1 hr ago', logo: 'https://www.chipmongbank.com/fb-og-image.jpg', color: '#d8232a' },
 ]
 
 const availableBanks = [
@@ -20,18 +21,6 @@ const availableBanks = [
   { name: 'Aceleda Bank', logo: 'https://cccbic.org/businesses/430-logo.jpg', users: '2M+' },
   { name: 'Wing Bank', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMTnHfaEfTex5H6zVSUHv0SeW6NYrd3RsYlg&s', users: '2M+' },
   { name: 'ChipMong Bank', logo: 'https://www.chipmongbank.com/fb-og-image.jpg', users: '2M+' },
-  { name: 'Chase', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK12bmtfhc8ntoxm5lP1DRrLg_sdP6L5_ANg&s', users: '2.1M+' },
-  { name: 'Bank of America', logo: 'https://media.bizj.us/view/img/11138963/new-bank-of-america-logo*1200xx3000-1688-0-356.jpg', users: '1.8M+' },
-  { name: 'Wells Fargo', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Wells_Fargo_Logo_%282020%29.svg/1280px-Wells_Fargo_Logo_%282020%29.svg.png', users: '1.4M+' },
-  { name: 'Citibank', logo: 'https://logos-world.net/wp-content/uploads/2021/02/Citigroup-Logo-2011-present.jpg', users: '980K+' },
-  { name: 'Capital One', logo: 'https://logos-world.net/wp-content/uploads/2021/04/Capital-One-Symbol.png', users: '760K+' },
-  { name: 'American Express', logo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/American_Express_logo_%282018%29.svg', users: '640K+' },
-  { name: 'Fidelity', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbydsR6shIeXH6pyUjzIqc9QTHprLieyovDg&s', users: '920K+' },
-  { name: 'Vanguard', logo: 'https://logos-world.net/wp-content/uploads/2021/03/Vanguard-Emblem.png', users: '540K+' },
-  { name: 'PayPal', logo: 'https://thumbs.dreamstime.com/b/paypal-logo-printed-paper-chisinau-moldova-september-internet-based-digital-money-transfer-service-128373487.jpg', users: '1.2M+' },
-  { name: 'Venmo', logo: 'https://play-lh.googleusercontent.com/YAKMX5YFcuE8_NogkbM7gkqrhBY6CUefbpULAVnNZLSitbo9S3Dw2FIYNqhW0d5G94Y', users: '880K+' },
-  { name: 'Apple Pay', logo: 'https://img.icons8.com/external-tal-revivo-color-tal-revivo/1200/external-apple-pay-a-mobile-payment-and-digital-wallet-service-by-apple-logo-color-tal-revivo.jpg', users: '1.5M+' },
-  { name: 'Google Pay', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQR4ArUxtci1ip0bL0K9hs9QtwcJGy_gu9iYA&s', users: '900K+' },
 ]
 
 const availableWallets = [
@@ -52,14 +41,14 @@ const wallets = [
 ]
 
 const recentSynced = [
-  { bank: 'Chase', desc: 'Whole Foods Market', cat: 'Food', date: 'Apr 28', amount: -127.40, synced: true },
-  { bank: 'Chase', desc: 'Salary - Employer Inc.', cat: 'Income', date: 'Apr 28', amount: 4200.00, synced: true },
-  { bank: 'BoA', desc: 'Amazon.com', cat: 'Shopping', date: 'Apr 27', amount: -89.99, synced: true },
-  { bank: 'BoA', desc: 'Netflix', cat: 'Entertainment', date: 'Apr 26', amount: -15.99, synced: true },
-  { bank: 'Chase', desc: 'Shell Gas Station', cat: 'Transport', date: 'Apr 26', amount: -62.00, synced: true },
-  { bank: 'Chase', desc: 'Mortgage Payment', cat: 'Housing', date: 'Apr 25', amount: -1850.00, synced: true },
+  { bank: 'ABA Bank', desc: 'Whole Foods Market', cat: 'Food', date: 'Apr 28', amount: -127.40, synced: true },
+  { bank: 'Canadia Bank', desc: 'Salary - Employer Inc.', cat: 'Income', date: 'Apr 28', amount: 4200.00, synced: true },
+  { bank: 'Aceleda Bank', desc: 'Amazon.com', cat: 'Shopping', date: 'Apr 27', amount: -89.99, synced: true },
+  { bank: 'Wing Bank', desc: 'Netflix', cat: 'Entertainment', date: 'Apr 26', amount: -15.99, synced: true },
+  { bank: 'ChipMong Bank', desc: 'Shell Gas Station', cat: 'Transport', date: 'Apr 26', amount: -62.00, synced: true },
+  { bank: 'ABA Bank', desc: 'Mortgage Payment', cat: 'Housing', date: 'Apr 25', amount: -1850.00, synced: true },
   { bank: 'PayPal', desc: 'Freelance Payment', cat: 'Income', date: 'Apr 24', amount: 350.00, synced: false },
-  { bank: 'BoA', desc: 'Gym Membership', cat: 'Health', date: 'Apr 23', amount: -49.00, synced: true },
+  { bank: 'Canadia Bank', desc: 'Gym Membership', cat: 'Health', date: 'Apr 23', amount: -49.00, synced: true },
 ]
 
 const balanceHistory = [
@@ -81,17 +70,22 @@ const syncActivity = [
   { day: 'Sun', txCount: 4 },
 ]
 
+
 // Professional icon components
 const Icons = {
-  Add: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>,
-  Sync: () => <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>,
-  Details: () => <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>,
-  Unlink: () => <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>,
-  Close: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>,
-  Search: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>,
-  Lock: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>,
-  Shield: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>,
-  Eye: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>,
+  Add: () => <Plus className="w-4 h-4" />,
+  Sync: () => <RefreshCw className="w-3.5 h-3.5" />,
+  Details: () => <ChevronRight className="w-3.5 h-3.5" />,
+  Unlink: () => <Unlink className="w-3.5 h-3.5" />,
+  Close: () => <X className="w-4 h-4" />,
+  Search: () => <Search className="w-4 h-4" />,
+  Lock: () => <Lock className="w-4 h-4" />,
+  Shield: () => <Shield className="w-4 h-4" />,
+  Eye: () => <Eye className="w-4 h-4" />,
+  LinkIcon: () => <LinkIcon className="w-5 h-5" />,
+  Wallet: () => <Wallet className="w-5 h-5" />,
+  CreditCard: () => <CreditCard className="w-5 h-5" />,
+  Smartphone: () => <Smartphone className="w-5 h-5" />,
 }
 
 /* ── Custom Tooltip ──────────────────────────────────── */
@@ -244,10 +238,10 @@ export default function BankIntegration() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard label="Connected Accounts" value={activeCount} sub="all syncing" color="emerald" icon="🔗" />
-        <StatCard label="Total Balance" value={fmt(totalBalance)} sub="across all accounts" trend={2.1} color="emerald" icon="💰" />
-        <StatCard label="Credit Balances" value={fmt(totalDebt)} sub="total owed" color="rose" icon="💳" />
-        <StatCard label="Digital Wallets" value={fmt(walletTotal)} sub={`${walletState.filter(w=>w.status==='connected').length} connected`} color="amber" icon="📱" />
+        <StatCard label="Connected Accounts" value={activeCount} sub="all syncing" color="emerald" icon={<Icons.LinkIcon />} />
+        <StatCard label="Total Balance" value={fmt(totalBalance)} sub="across all accounts" trend={2.1} color="emerald" icon={<Icons.Wallet />} />
+        <StatCard label="Credit Balances" value={fmt(totalDebt)} sub="total owed" color="rose" icon={<Icons.CreditCard />} />
+        <StatCard label="Digital Wallets" value={fmt(walletTotal)} sub={`${walletState.filter(w=>w.status==='connected').length} connected`} color="amber" icon={<Icons.Smartphone />} />
       </div>
 
       {/* Connect Modal */}

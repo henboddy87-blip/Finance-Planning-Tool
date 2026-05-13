@@ -10,32 +10,26 @@ const Toggle = ({ value, onChange }) => (
   </div>
 )
 
+import { Upload, Trash2, Save, Eye, EyeOff, Lock, Download, AlertTriangle, Calendar, Sun, Moon } from 'lucide-react'
+
 // Professional theme icons matching sidebar
 const ThemeIcons = {
-  Light: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-    </svg>
-  ),
-  Dark: () => (
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-    </svg>
-  ),
+  Light: () => <Sun className="w-5 h-5" />,
+  Dark: () => <Moon className="w-5 h-5" />,
 }
 
 // Professional icon components
 const Icons = {
-  Upload: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>,
-  Remove: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>,
-  Save: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>,
-  Eye: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>,
-  EyeOff: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>,
-  Lock: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>,
-  Export: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>,
-  Danger: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>,
-  Calendar: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>,
-  Download: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>,
+  Upload: () => <Upload className="w-4 h-4" />,
+  Remove: () => <Trash2 className="w-4 h-4" />,
+  Save: () => <Save className="w-4 h-4" />,
+  Eye: () => <Eye className="w-4 h-4" />,
+  EyeOff: () => <EyeOff className="w-4 h-4" />,
+  Lock: () => <Lock className="w-4 h-4" />,
+  Export: () => <Download className="w-4 h-4" />,
+  Danger: () => <AlertTriangle className="w-4 h-4" />,
+  Calendar: () => <Calendar className="w-4 h-4" />,
+  Download: () => <Download className="w-4 h-4" />,
 }
 
 // Helper function to export data
@@ -257,9 +251,9 @@ export default function Settings() {
       {activeTab === 'profile' && (
         <Section title="Profile Information" subtitle="Update your personal details and profile picture">
           {/* Avatar upload area */}
-          <div className="flex flex-col md:flex-row gap-4 items-start mb-5 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-700">
-            <div className="relative flex-shrink-0 self-center md:self-start">
-              <div className="w-20 h-20 rounded-full flex items-center justify-center font-bold text-white text-2xl overflow-hidden border-2 border-gray-300 dark:border-gray-600 shadow-sm" style={{ background: localUser.avatar ? 'transparent' : 'linear-gradient(135deg, #10b981, #f59e0b)' }}>
+          <div className="flex flex-col sm:flex-row gap-6 items-center mb-6 p-6 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-gray-700">
+            <div className="relative flex-shrink-0">
+              <div className="w-24 h-24 rounded-full flex items-center justify-center font-bold text-white text-3xl overflow-hidden border-4 border-white dark:border-gray-800 shadow-md" style={{ background: localUser.avatar ? 'transparent' : 'linear-gradient(135deg, #10b981, #f59e0b)' }}>
                 {localUser.avatar
                   ? <img src={localUser.avatar} alt="avatar" className="w-full h-full object-cover" />
                   : localUser.initials
@@ -267,27 +261,30 @@ export default function Settings() {
               </div>
               {uploading && (
                 <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 </div>
               )}
             </div>
-            <div className="flex-1 text-center md:text-left">
-              <div className="font-semibold text-gray-900 dark:text-gray-100 mb-1">{localUser.name}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mb-3">{localUser.email}</div>
-              <div className="flex gap-2 flex-wrap justify-center md:justify-start">
-                <button className="px-3 py-1.5 text-xs font-medium bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-all flex items-center gap-1" onClick={() => fileInputRef.current?.click()}>
+            <div className="flex-1 text-center sm:text-left flex flex-col items-center sm:items-start w-full">
+              <div className="font-bold text-xl text-gray-900 dark:text-white mb-1">{localUser.name}</div>
+              <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">{localUser.email}</div>
+              <div className="flex gap-2 flex-wrap justify-center sm:justify-start">
+                <button className="px-4 py-2 text-sm font-medium bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md" onClick={() => fileInputRef.current?.click()}>
                   <Icons.Upload /> Upload Photo
                 </button>
                 {localUser.avatar && (
-                  <button className="px-3 py-1.5 text-xs font-medium bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg transition-all flex items-center gap-1" onClick={handleRemovePhoto}>
+                  <button className="px-4 py-2 text-sm font-medium bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg transition-all flex items-center gap-2 shadow-sm hover:shadow-md" onClick={handleRemovePhoto}>
                     <Icons.Remove /> Remove
                   </button>
                 )}
                 <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
               </div>
-              <div className="text-xs text-gray-400 dark:text-gray-500 mt-2">JPG, PNG, GIF or WebP · Max 5 MB</div>
+              <div className="text-xs text-gray-400 dark:text-gray-500 mt-3 font-medium">JPG, PNG, GIF or WebP · Max 5 MB</div>
             </div>
-            <span className="px-2 py-1 text-xs rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 self-center md:self-start">{localUser.plan} Plan</span>
+            <div className="sm:pl-6 sm:border-l border-gray-200 dark:border-gray-700 flex flex-col items-center sm:items-end w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-t-0 mt-2 sm:mt-0">
+              <span className="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">{localUser.plan} Plan</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center sm:text-right">Active since<br/>{localUser.joinDate}</span>
+            </div>
           </div>
 
           {/* Form fields */}

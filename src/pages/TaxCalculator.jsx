@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react'
+import { Calculator, SlidersHorizontal } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import PageHeader from '../components/PageHeader.jsx'
 import { fmt, fmtFull } from '../utils/format.js'
@@ -41,10 +42,11 @@ function calcTax(taxableIncome, brackets) {
   return { tax: Math.round(tax), breakdown }
 }
 
-// Professional icon components
+
+
 const Icons = {
-  Calculator: () => <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>,
-  Toggle: () => <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>,
+  Calculator: () => <Calculator className="w-4 h-4" />,
+  Toggle: () => <SlidersHorizontal className="w-3.5 h-3.5" />,
 }
 
 export default function TaxCalculator() {
