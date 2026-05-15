@@ -86,7 +86,7 @@ const DEFAULT_USER = {
   language: 'English',
   avatar: null,
   initials: 'AJ',
-  plan: 'Pro',
+  plan: 'Free',
   joinDate: 'January 2024',
   notifications: {
     budgetAlerts: true, goalMilestones: true,

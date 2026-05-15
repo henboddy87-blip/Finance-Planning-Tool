@@ -9,7 +9,7 @@ import {
 import PageHeader from '../components/PageHeader.jsx'
 import StatCard from '../components/StatCard.jsx'
 import { fmt, fmtFull, fmtPct, COLORS } from '../utils/format.js'
-import { useToast } from '../context/AppContext.jsx'
+import { useToast, useLocalStorage } from '../context/AppContext.jsx'
 
 /* ── Data ─────────────────────────────────────────────── */
 const initialHoldings = [
@@ -83,7 +83,7 @@ const CAT_COLORS = { Stock:'#10b981', ETF:'#3b82f6', Bond:'#f59e0b', REIT:'#8b5c
 /* ── Main ─────────────────────────────────────────────── */
 export default function InvestmentTracker() {
   const toast = useToast()
-  const [holdings, setHoldings] = useState(initialHoldings)
+  const [holdings, setHoldings] = useLocalStorage('wp_holdings', initialHoldings)
   const [showAdd, setShowAdd]   = useState(false)
   const [tab, setTab]           = useState('portfolio')
   const [sortBy, setSortBy]     = useState('value')

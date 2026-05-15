@@ -282,8 +282,8 @@ export default function Settings() {
               <div className="text-xs text-gray-400 dark:text-gray-500 mt-3 font-medium">JPG, PNG, GIF or WebP · Max 5 MB</div>
             </div>
             <div className="sm:pl-6 sm:border-l border-gray-200 dark:border-gray-700 flex flex-col items-center sm:items-end w-full sm:w-auto pt-4 sm:pt-0 border-t sm:border-t-0 mt-2 sm:mt-0">
-              <span className="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">{localUser.plan} Plan</span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center sm:text-right">Active since<br/>{localUser.joinDate}</span>
+              <span className="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">Free Account</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center sm:text-right">Member since<br/>{localUser.joinDate}</span>
             </div>
           </div>
 

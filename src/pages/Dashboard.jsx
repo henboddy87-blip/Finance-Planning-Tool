@@ -8,8 +8,9 @@ import {
 import PageHeader from '../components/PageHeader.jsx'
 import StatCard from '../components/StatCard.jsx'
 import { fmt, fmtFull, COLORS } from '../utils/format.js'
+import { useTheme, useUser, useLocalStorage } from '../context/AppContext.jsx'
 
-/* ── Static Data ─────────────────────────────────────── */
+/* ── Static Demo Data (For History Graphs) ──────────────── */
 const incomeVsExpense = {
   daily: [
     { label: 'Mon', income: 380, expenses: 210 },
@@ -93,29 +94,6 @@ const spendingTrends = {
   ],
 }
 
-const allocationData = [
-  { name: 'Stocks', value: 58 },
-  { name: 'Bonds', value: 18 },
-  { name: 'Real Estate', value: 14 },
-  { name: 'Cash', value: 6 },
-  { name: 'Crypto', value: 4 },
-]
-
-const recentTx = [
-  { desc: 'Salary Deposit', cat: 'Income', date: 'Apr 28', amount: 4200, type: 'income' },
-  { desc: 'Mortgage Payment', cat: 'Housing', date: 'Apr 27', amount: -1850, type: 'expense' },
-  { desc: 'S&P 500 ETF', cat: 'Investment', date: 'Apr 26', amount: -500, type: 'invest' },
-  { desc: 'Grocery Store', cat: 'Food', date: 'Apr 25', amount: -187, type: 'expense' },
-  { desc: 'Dividend Income', cat: 'Investment', date: 'Apr 24', amount: 124, type: 'income' },
-  { desc: 'Electricity Bill', cat: 'Utilities', date: 'Apr 23', amount: -92, type: 'expense' },
-]
-
-const goals = [
-  { name: 'Emergency Fund', progress: 78, target: 25000, current: 19500, color: '#10b981' },
-  { name: 'House Down Payment', progress: 42, target: 80000, current: 33600, color: '#f59e0b' },
-  { name: 'Retirement', progress: 31, target: 1500000, current: 465000, color: '#3b82f6' },
-]
-
 /* Widget registry */
 const ALL_WIDGETS = [
   { id: 'stats', label: 'KPI Stats' },
@@ -129,7 +107,6 @@ const ALL_WIDGETS = [
   { id: 'goals', label: 'Active Goals' },
 ]
 
-/* Custom Tooltip */
 /* Custom Tooltip */
 const CT = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
@@ -181,17 +158,83 @@ function PeriodPills({ period, setPeriod }) {
 
 /* ─────────────────────────────────────────────────────── */
 export default function Dashboard({ onNavigate }) {
+  const { user } = useUser()
   const [period, setPeriod] = useState('monthly')
   const [showCustomize, setShow] = useState(false)
   const [activeWidgets, setActive] = useState(ALL_WIDGETS.map(w => w.id))
+
+  // Real Data Connectors
+  const [realAssets]      = useLocalStorage('wp_assets', [])
+  const [realLiabilities] = useLocalStorage('wp_liabilities', [])
+  const [realGoals]       = useLocalStorage('wp_goals', [])
+  const [realHoldings]    = useLocalStorage('wp_holdings', [])
+  const [realSplits]      = useLocalStorage('fm_splits', [])
+
+  // Derived Real KPI Stats
+  const totalAssetsValue = realAssets.reduce((s, a) => s + a.value, 0)
+  const totalLiabilitiesValue = realLiabilities.reduce((s, l) => s + l.value, 0)
+  const netWorthValue = totalAssetsValue - totalLiabilitiesValue
+  
+  // Real Portfolio Allocation
+  const allocationData = React.useMemo(() => {
+    if (realHoldings.length === 0) return [
+      { name: 'Stocks', value: 58 }, { name: 'Bonds', value: 18 },
+      { name: 'Real Estate', value: 14 }, { name: 'Cash', value: 6 }, { name: 'Crypto', value: 4 }
+    ]
+    const map = {}
+    const total = realHoldings.reduce((s, h) => s + (h.shares * h.currentPrice), 0)
+    realHoldings.forEach(h => {
+      const val = h.shares * h.currentPrice
+      map[h.category] = (map[h.category] || 0) + val
+    })
+    return Object.entries(map).map(([name, value]) => ({ 
+      name, 
+      value: Math.round((value / total) * 100) 
+    }))
+  }, [realHoldings])
+
+  // Real Recent Transactions (from Family Mode Splits)
+  const recentTx = React.useMemo(() => {
+    if (realSplits.length === 0) return [
+      { desc: 'Salary Deposit', cat: 'Income', date: 'Apr 28', amount: 4200, type: 'income' },
+      { desc: 'Mortgage Payment', cat: 'Housing', date: 'Apr 27', amount: -1850, type: 'expense' },
+      { desc: 'Grocery Store', cat: 'Food', date: 'Apr 25', amount: -187, type: 'expense' },
+    ]
+    return realSplits.slice(0, 6).map(s => ({
+      desc: s.desc,
+      cat: s.category,
+      date: s.date.slice(5), // simplified date
+      amount: -s.amount,
+      type: 'expense'
+    }))
+  }, [realSplits])
+
+  // Real Goals
+  const goals = React.useMemo(() => {
+    if (realGoals.length === 0) return [
+      { name: 'Emergency Fund', progress: 78, target: 25000, current: 19500, color: '#10b981' },
+      { name: 'House Down Payment', progress: 42, target: 80000, current: 33600, color: '#f59e0b' },
+    ]
+    return realGoals.slice(0, 3).map(g => ({
+      name: g.name,
+      progress: Math.round((g.current / g.target) * 100),
+      target: g.target,
+      current: g.current,
+      color: g.color || '#10b981'
+    }))
+  }, [realGoals])
 
   const has = (id) => activeWidgets.includes(id)
   const toggle = (id) => setActive(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id])
 
   const ieData = incomeVsExpense[period]
   const spendData = spendingTrends[period]
+  
+  // Real Income/Expense Connection
+  const realPeriodTotalOut = realSplits.reduce((s, d) => s + d.amount, 0)
   const totalIn = ieData.reduce((s, d) => s + d.income, 0)
-  const totalOut = ieData.reduce((s, d) => s + d.expenses, 0)
+  const totalOut = realPeriodTotalOut > 0 ? realPeriodTotalOut : ieData.reduce((s, d) => s + d.expenses, 0)
+  
   const surplus = totalIn - totalOut
   const avgSR = savingsRateData.reduce((s, d) => s + d.rate, 0) / savingsRateData.length
 
@@ -269,9 +312,9 @@ export default function Dashboard({ onNavigate }) {
       {/* KPI Stats */}
       {has('stats') && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <StatCard label="Net Worth" value={fmt(164800)} sub="all-time high" trend={3.2} color="emerald" icon={<Diamond className="w-5 h-5 text-emerald-500" />} />
-          <StatCard label="Monthly Income" value={fmt(8400)} sub="this month" trend={2.4} color="amber" icon={<ArrowUp className="w-5 h-5 text-amber-500" />} />
-          <StatCard label="Monthly Expenses" value={fmt(5200)} sub="this month" trend={-1.8} color="rose" icon={<ArrowDown className="w-5 h-5 text-rose-500" />} />
+          <StatCard label="Net Worth" value={fmt(netWorthValue)} sub="Current Balance" trend={3.2} color="emerald" icon={<Diamond className="w-5 h-5 text-emerald-500" />} />
+          <StatCard label="Monthly Income" value={fmt(totalIn)} sub="This period" trend={2.4} color="amber" icon={<ArrowUp className="w-5 h-5 text-amber-500" />} />
+          <StatCard label="Monthly Expenses" value={fmt(totalOut)} sub="This period" trend={-1.8} color="rose" icon={<ArrowDown className="w-5 h-5 text-rose-500" />} />
           <StatCard label="Savings Rate" value={`${avgSR.toFixed(1)}%`} sub="6-month avg" trend={4.1} color="blue" icon={<Target className="w-5 h-5 text-blue-500" />} />
         </div>
       )}

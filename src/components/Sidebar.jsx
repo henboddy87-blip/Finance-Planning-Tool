@@ -166,7 +166,7 @@ export default function Sidebar({ currentPage, onNavigate, isOpen, onToggle }) {
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm font-bold text-gray-800 dark:text-gray-100 truncate leading-tight">{user?.name || 'Peter Son'}</div>
-              <div className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 mt-0.5 uppercase tracking-wide">{user?.plan || 'Pro'} Member</div>
+              <div className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 mt-0.5 uppercase tracking-wide">Financial Member</div>
             </div>
           </div>
         </div>

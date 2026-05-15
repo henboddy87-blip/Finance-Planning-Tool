@@ -3,7 +3,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { ArrowUp, X } from 'lucide-react'
 import PageHeader from '../components/PageHeader.jsx'
 import { fmt } from '../utils/format.js'
-import { useToast } from '../context/AppContext.jsx'
+import { useToast, useLocalStorage } from '../context/AppContext.jsx'
 
 const initialAssets = [
   { id: 1, name: 'Primary Home', category: 'Real Estate', value: 520000, type: 'asset' },
@@ -37,8 +37,8 @@ const liabCats = ['Real Estate','Auto','Education','Revolving','Other']
 
 export default function NetWorth() {
   const toast = useToast()
-  const [assets, setAssets] = useState(initialAssets)
-  const [liabilities, setLiabilities] = useState(initialLiabilities)
+  const [assets, setAssets] = useLocalStorage('wp_assets', initialAssets)
+  const [liabilities, setLiabilities] = useLocalStorage('wp_liabilities', initialLiabilities)
   const [showAdd, setShowAdd] = useState(null) // 'asset' | 'liability'
   const [form, setForm] = useState({ name: '', category: '', value: '' })
 
