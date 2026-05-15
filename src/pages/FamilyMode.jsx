@@ -3,7 +3,7 @@ import { UserPlus, Plus, Edit2, Trash2, BadgeDollarSign, X } from 'lucide-react'
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import PageHeader from '../components/PageHeader.jsx'
 import { fmt, fmtFull, COLORS } from '../utils/format.js'
-import { useToast } from '../context/AppContext.jsx'
+import { useToast, useUser, useLocalStorage } from '../context/AppContext.jsx'
 
 /* ── Data ─────────────────────────────────────────────── */
 const INCOME_SOURCES = ['Salary','Freelance','Passive','Other']
@@ -34,23 +34,82 @@ const Icons = {
   Close: () => <X className="w-4 h-4" />,
 }
 
-/* ── Main ─────────────────────────────────────────────── */
+/* Custom Tooltip Component */
+const ChartTooltip = ({ active, payload, label }) => {
+  if (!active || !payload?.length) return null
+  // Filter out duplicates
+  const uniquePayload = payload.filter((item, index, self) => 
+    index === self.findIndex((t) => t.name === item.name)
+  )
+
+  return (
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-3 shadow-2xl ring-1 ring-black/5 dark:ring-white/5 animate-scaleIn min-w-[140px]">
+      {label && <div className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2 border-b border-gray-100 dark:border-gray-800/50 pb-1.5">{label}</div>}
+      <div className="space-y-2">
+        {uniquePayload.map((p, i) => (
+          <div key={i} className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full shadow-sm" style={{ background: p.color || p.payload?.fill || '#555' }} />
+              <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">{p.name}</span>
+            </div>
+            <span className="text-xs text-gray-900 dark:text-gray-100 font-bold">
+              {fmt(p.value)}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function FamilyMode() {
   const toast = useToast()
-  const [members, setMembers]     = useState(initialMembers)
+  const { user } = useUser()
+  const currentUserFirstName = user?.name?.split(' ')[0] || 'Alex'
+  
+  // Persistence for Family Mode data
+  const [members, setMembers] = useLocalStorage('fm_members', [])
+  const [budgets, setBudgets] = useLocalStorage('fm_budgets', [])
+  const [splits, setSplits]   = useLocalStorage('fm_splits', [])
+
+  // Initialize with current user if members is empty
+  React.useEffect(() => {
+    if (members.length === 0 && user) {
+      setMembers([{
+        id: 'self',
+        name: user.name,
+        role: 'Admin',
+        email: user.email,
+        avatar: user.initials || 'AJ',
+        color: '#10b981',
+        income: 5000,
+        incomeSources: { Salary: 5000, Freelance: 0, Passive: 0, Other: 0 },
+        expenses: 0,
+        budgetShare: 0,
+        joined: 'Jan 2024',
+        lastActive: 'Just now',
+        permissions: { view: true, edit: true, invite: true, delete: true }
+      }])
+    }
+  }, [user, members.length, setMembers])
+
   const [tab, setTab]             = useState('overview')
   const [showInvite, setInvite]   = useState(false)
   const [showPerm, setPerm]       = useState(null)
   const [inviteForm, setInvForm]  = useState({ name:'', email:'', role:'Member', income:'', budgetShare:'' })
-  const [splits, setSplits]       = useState(expenseSplits)
   const [showSplit, setShowSplit] = useState(false)
-  const [splitForm, setSplitForm] = useState({ desc: '', amount: '', paidBy: 'Alex Johnson', splitType: 'equal' })
-  const [budgets, setBudgets]     = useState(sharedBudgets)
+  const [splitForm, setSplitForm] = useState({ desc: '', amount: '', paidBy: user?.name || 'Alex Johnson', splitType: 'equal' })
   const [showAddBudget, setShowAddBudget] = useState(false)
-  const [budgetForm, setBudgetForm] = useState({ name: '', total: '', color: '#2a7d4f', isGoal: false, category: 'Housing', selectedMembers: ['AJ'] })
+  const [budgetForm, setBudgetForm] = useState({ 
+    name: '', total: '', color: '#2a7d4f', isGoal: false, category: 'Housing', 
+    selectedMembers: user ? [user.initials || 'AJ'] : [],
+    memberAmounts: {} 
+  })
   const [editingMember, setEditingMember] = useState(null)
   const [confirmRemove, setConfirmRemove] = useState(null)
   const [incomeEditing, setIncomeEditing] = useState(null)
+  const [updateBudget, setUpdateBudget] = useState(null) // { id, amount }
+  const [updateAmount, setUpdateAmount] = useState('')
 
   const totalFamilyIncome   = members.reduce((s,m) => s + m.income, 0)
   const totalFamilyExpenses = members.reduce((s,m) => s + m.expenses, 0)
@@ -92,23 +151,29 @@ export default function FamilyMode() {
     if (!splitForm.desc || !splitForm.amount) return
     const amt = parseFloat(splitForm.amount)
     const perPerson = amt / members.length
+    
+    // Determine who paid (first name)
+    const payerName = splitForm.paidBy.split(' ')[0]
+    
     const newSplit = {
       id: Date.now(),
       desc: splitForm.desc,
       amount: amt,
-      paidBy: splitForm.paidBy.split(' ')[0],
+      paidBy: payerName,
       date: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric' }),
       settled: false,
       split: members.reduce((acc, m) => ({ ...acc, [m.name.split(' ')[0]]: parseFloat(perPerson.toFixed(2)) }), {})
     }
     setSplits(prev => [newSplit, ...prev])
     setShowSplit(false)
-    setSplitForm({ desc: '', amount: '', paidBy: 'Alex Johnson', splitType: 'equal' })
+    setSplitForm({ desc: '', amount: '', paidBy: user?.name || 'Alex Johnson', splitType: 'equal' })
     toast.success('Split Created', `Expense for "${splitForm.desc}" split successfully.`)
   }
 
   const handleAddBudget = () => {
     if (!budgetForm.name || !budgetForm.total) return
+    
+    // Check if total contributions match total budget, or just use entered values
     const newBudget = {
       id: Date.now(),
       name: budgetForm.name,
@@ -116,31 +181,38 @@ export default function FamilyMode() {
       spent: 0,
       saved: 0,
       members: budgetForm.selectedMembers,
-      contributions: budgetForm.selectedMembers.reduce((acc, av) => ({...acc, [av]: 0}), {}),
+      contributions: budgetForm.selectedMembers.reduce((acc, av) => {
+        acc[av] = parseFloat(budgetForm.memberAmounts[av] || 0)
+        return acc
+      }, {}),
       color: budgetForm.color,
       category: budgetForm.category,
       isGoal: budgetForm.isGoal
     }
     setBudgets(prev => [...prev, newBudget])
     setShowAddBudget(false)
-    setBudgetForm({ name: '', total: '', color: '#2a7d4f', isGoal: false, category: 'Housing', selectedMembers: ['AJ'] })
+    setBudgetForm({ 
+      name: '', total: '', color: '#2a7d4f', isGoal: false, category: 'Housing', 
+      selectedMembers: user ? [user.initials || 'AJ'] : [],
+      memberAmounts: {} 
+    })
     toast.success('Budget Created', `Shared budget "${budgetForm.name}" created with ${newBudget.members.length} members.`)
   }
 
-  const toggleBudgetMember = (budgetId, memberAvatar) => {
+  const handleUpdateProgress = () => {
+    if (!updateBudget || !updateAmount) return
+    const val = parseFloat(updateAmount)
     setBudgets(prev => prev.map(b => {
-      if (b.id !== budgetId) return b
-      const isMember = b.members.includes(memberAvatar)
-      const newContribs = { ...b.contributions }
-      if (isMember) { delete newContribs[memberAvatar] } else { newContribs[memberAvatar] = 0 }
-      return {
-        ...b,
-        members: isMember ? b.members.filter(m => m !== memberAvatar) : [...b.members, memberAvatar],
-        contributions: newContribs
+      if (b.id !== updateBudget.id) return b
+      if (b.isGoal) {
+        return { ...b, saved: b.saved + val }
+      } else {
+        return { ...b, spent: b.spent + val }
       }
     }))
-    const isMember = budgets.find(b=>b.id===budgetId)?.members.includes(memberAvatar)
-    toast.info(isMember ? 'Left Budget' : 'Joined Budget', isMember ? 'You have left this shared budget.' : 'You have joined this shared budget.')
+    setUpdateBudget(null)
+    setUpdateAmount('')
+    toast.success('Progress Updated', `Successfully added ${fmt(val)} to "${updateBudget.name}".`)
   }
 
   const updateMemberIncome = (id, income) => {
@@ -314,32 +386,71 @@ export default function FamilyMode() {
                       <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-gray-700" />
                       <XAxis dataKey="name" tick={{ fill:'#6b7280', fontSize:11 }} axisLine={false} tickLine={false} className="dark:[&_tspan]:fill-gray-500" />
                       <YAxis tick={{ fill:'#6b7280', fontSize:11 }} axisLine={false} tickLine={false} tickFormatter={v=>`$${v/1000}k`} className="dark:[&_tspan]:fill-gray-500" />
-                      <Tooltip contentStyle={{ background:'#fff', border:'1px solid #e5e7eb', borderRadius:'0.5rem', fontSize:'0.8rem' }} formatter={v=>fmt(v)} className="dark:[&_div]:bg-gray-800 dark:[&_div]:border-gray-700" />
+                      <Tooltip content={<ChartTooltip />} contentStyle={{ backgroundColor: 'transparent', border: 'none' }} cursor={{ fill: 'rgba(0,0,0,0.05)' }} wrapperStyle={{ zIndex: 100 }} />
                       <Bar dataKey="income"   name="Income"   fill="#10b981" radius={[4,4,0,0]} />
                       <Bar dataKey="expenses" name="Expenses" fill="#f43f5e" radius={[4,4,0,0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
-                <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 p-5">
-                  <div className="text-sm font-semibold text-gray-900 dark:text-gray-200 mb-3">Family Expense Share</div>
-                  <ResponsiveContainer width="100%" height={190}>
-                    <PieChart>
-                      <Pie data={members.map(m=>({ name:m.name.split(' ')[0], value:m.expenses }))} cx="50%" cy="50%" innerRadius={45} outerRadius={75} paddingAngle={3} dataKey="value">
-                        {members.map((_,i)=><Cell key={i} fill={members[i].color} />)}
-                      </Pie>
-                      <Tooltip formatter={v=>fmt(v)} contentStyle={{ background:'#fff', border:'1px solid #e5e7eb', borderRadius:'0.5rem', fontSize:'0.8rem' }} className="dark:[&_div]:bg-gray-800 dark:[&_div]:border-gray-700" />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <div className="space-y-1 mt-2">
-                    {members.map((m,i) => (
-                      <div key={i} className="flex justify-between text-xs">
-                        <div className="flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-sm" style={{ background:m.color }} />
-                          <span className="text-gray-600 dark:text-gray-500">{m.name.split(' ')[0]}</span>
-                        </div>
-                        <span className="text-gray-900 dark:text-gray-300 font-medium">{fmt(m.expenses)}</span>
+                <div className="bg-white dark:bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 p-5 flex flex-col">
+                  <div className="text-sm font-semibold text-gray-900 dark:text-gray-200 mb-4 flex justify-between items-center">
+                    <span>Family Expense Share</span>
+                    <span className="text-[10px] bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 px-2 py-0.5 rounded-full font-medium">Monthly</span>
+                  </div>
+                  <div className="flex-1 flex flex-col sm:flex-row items-center gap-6">
+                    <div className="relative w-full sm:w-1/2 aspect-square max-w-[180px]">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie 
+                            data={members.map(m=>({ name:m.name.split(' ')[0], value:m.expenses || 0 }))} 
+                            cx="50%" cy="50%" 
+                            innerRadius="65%" outerRadius="90%" 
+                            paddingAngle={4} 
+                            dataKey="value"
+                            stroke="none"
+                          >
+                            {members.map((m,i)=><Cell key={i} fill={m.color} className="outline-none hover:opacity-80 transition-opacity cursor-pointer" />)}
+                          </Pie>
+                          <Tooltip content={<ChartTooltip />} contentStyle={{ backgroundColor: 'transparent', border: 'none' }} wrapperStyle={{ zIndex: 100 }} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                      {/* Center Label */}
+                      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <div className="text-[10px] text-gray-500 dark:text-gray-500 font-medium uppercase tracking-tighter">Total</div>
+                        <div className="text-lg font-bold text-gray-900 dark:text-white leading-tight">{fmt(totalFamilyExpenses)}</div>
                       </div>
-                    ))}
+                    </div>
+                    
+                    <div className="flex-1 w-full space-y-2.5">
+                      {members.map((m,i) => {
+                        const share = totalFamilyExpenses > 0 ? (m.expenses / totalFamilyExpenses) * 100 : 0
+                        return (
+                          <div key={i} className="group flex flex-col gap-1">
+                            <div className="flex justify-between text-xs items-center">
+                              <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full shadow-sm" style={{ background:m.color }} />
+                                <span className="text-gray-700 dark:text-gray-300 font-medium">{m.name.split(' ')[0]}</span>
+                              </div>
+                              <div className="text-right">
+                                <span className="text-gray-900 dark:text-gray-100 font-bold">{fmt(m.expenses)}</span>
+                                <span className="text-[10px] text-gray-400 dark:text-gray-500 ml-1.5 font-medium">{share.toFixed(1)}%</span>
+                              </div>
+                            </div>
+                            <div className="h-1 w-full bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full rounded-full transition-all duration-700 ease-out shadow-sm" 
+                                style={{ width: `${share}%`, background: m.color }} 
+                              />
+                            </div>
+                          </div>
+                        )
+                      })}
+                      {members.length === 0 && (
+                        <div className="text-center py-4">
+                          <div className="text-xs text-gray-400 italic">No expense data available</div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -548,14 +659,31 @@ export default function FamilyMode() {
                             {b.isGoal ? 'Goal' : over ? 'Over Budget' : 'On Track'}
                           </span>
                           <button
-                            onClick={() => toggleBudgetMember(b.id, 'AJ')}
+                            onClick={() => setUpdateBudget(b)}
+                            className={`px-2 py-0.5 text-[10px] font-medium rounded-full transition-all bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-emerald-500 hover:text-white`}
+                          >
+                            Add {b.isGoal ? 'Savings' : 'Expense'}
+                          </button>
+                          <button
+                            onClick={() => {
+                              const isMember = b.members.includes(user?.initials || 'AJ')
+                              const memberAvatar = user?.initials || 'AJ'
+                              setBudgets(prev => prev.map(bud => {
+                                if (bud.id !== b.id) return bud
+                                const newMembers = isMember ? bud.members.filter(m => m !== memberAvatar) : [...bud.members, memberAvatar]
+                                const newContribs = { ...bud.contributions }
+                                if (isMember) { delete newContribs[memberAvatar] } else { newContribs[memberAvatar] = 0 }
+                                return { ...bud, members: newMembers, contributions: newContribs }
+                              }))
+                              toast.info(isMember ? 'Left Budget' : 'Joined Budget', isMember ? 'You have left this shared budget.' : 'You have joined this shared budget.')
+                            }}
                             className={`px-2 py-0.5 text-[10px] font-medium rounded-full transition-all ${
-                              userJoined
+                              b.members.includes(user?.initials || 'AJ')
                                 ? 'bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 hover:bg-rose-100'
                                 : 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100'
                             }`}
                           >
-                            {userJoined ? 'Leave' : 'Join'}
+                            {b.members.includes(user?.initials || 'AJ') ? 'Leave' : 'Join'}
                           </button>
                         </div>
                       </div>
@@ -575,15 +703,17 @@ export default function FamilyMode() {
                           <div className="space-y-1">
                             {Object.entries(b.contributions).map(([avatar, amount]) => {
                               const member = members.find(m => m.avatar === avatar)
-                              const totalContrib = Object.values(b.contributions).reduce((s,v) => s+v, 0)
-                              const contribPct = totalContrib > 0 ? (amount / totalContrib) * 100 : 0
+                              const contribPct = b.total > 0 ? (amount / b.total) * 100 : 0
                               return member ? (
                                 <div key={avatar} className="flex items-center gap-2">
-                                  <span className="text-[9px] text-gray-500 dark:text-gray-500 w-10">{member.name.split(' ')[0]}</span>
-                                  <div className="flex-1 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                    <div className="h-full rounded-full" style={{ width: `${contribPct}%`, background: member.color }} />
+                                  <span className="text-[9px] text-gray-500 dark:text-gray-400 w-12 truncate">{member.name.split(' ')[0]}</span>
+                                  <div className="flex-1 h-1.5 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                                    <div 
+                                      className="h-full rounded-full transition-all duration-500" 
+                                      style={{ width: `${Math.min(contribPct, 100)}%`, background: member.color }} 
+                                    />
                                   </div>
-                                  <span className="text-[9px] text-gray-600 dark:text-gray-400 w-12 text-right">{fmt(amount)}</span>
+                                  <span className="text-[9px] text-gray-600 dark:text-gray-300 w-12 text-right font-medium">{fmt(amount)}</span>
                                 </div>
                               ) : null
                             })}
@@ -629,24 +759,49 @@ export default function FamilyMode() {
                 <input className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors" type="number" placeholder="1000" value={budgetForm.total} onChange={e=>setBudgetForm(p=>({...p,total:e.target.value}))} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Share with Members</label>
-                <div className="flex flex-wrap gap-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Share with Members & Allocate Contribution</label>
+                <div className="space-y-3">
                   {members.map(m => {
                     const isSelected = budgetForm.selectedMembers.includes(m.avatar)
                     return (
-                      <button 
-                        key={m.id}
-                        onClick={() => setBudgetForm(p => ({
-                          ...p,
-                          selectedMembers: isSelected 
-                            ? p.selectedMembers.filter(av => av !== m.avatar)
-                            : [...p.selectedMembers, m.avatar]
-                        }))}
-                        className={`flex items-center gap-2 px-2 py-1 rounded-full border transition-all ${isSelected ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'bg-gray-50 border-gray-200 text-gray-500'}`}
-                      >
-                        <div className="w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold text-white" style={{ background: m.color }}>{m.avatar}</div>
-                        <span className="text-[10px]">{m.name.split(' ')[0]}</span>
-                      </button>
+                      <div key={m.id} className={`p-3 rounded-xl border transition-all ${isSelected ? 'bg-emerald-50 dark:bg-emerald-900/10 border-emerald-500' : 'bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700'}`}>
+                        <div className="flex items-center justify-between">
+                          <button 
+                            onClick={() => setBudgetForm(p => ({
+                              ...p,
+                              selectedMembers: isSelected 
+                                ? p.selectedMembers.filter(av => av !== m.avatar)
+                                : [...p.selectedMembers, m.avatar]
+                            }))}
+                            className="flex items-center gap-3"
+                          >
+                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shadow-sm" style={{ background: m.color }}>{m.avatar}</div>
+                            <div className="text-left">
+                              <div className={`text-sm font-semibold ${isSelected ? 'text-emerald-700 dark:text-emerald-400' : 'text-gray-700 dark:text-gray-400'}`}>{m.name.split(' ')[0]}</div>
+                              <div className="text-[10px] text-gray-500">{isSelected ? 'Included' : 'Not included'}</div>
+                            </div>
+                          </button>
+                          
+                          {isSelected && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] text-gray-500 font-medium">Spending:</span>
+                              <div className="relative">
+                                <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">$</span>
+                                <input 
+                                  type="number"
+                                  className="w-24 pl-5 pr-2 py-1 bg-white dark:bg-gray-800 border border-emerald-300 dark:border-emerald-700 rounded-md text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                                  placeholder="0.00"
+                                  value={budgetForm.memberAmounts[m.avatar] || ''}
+                                  onChange={e => setBudgetForm(p => ({
+                                    ...p,
+                                    memberAmounts: { ...p.memberAmounts, [m.avatar]: e.target.value }
+                                  }))}
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     )
                   })}
                 </div>
@@ -673,11 +828,11 @@ export default function FamilyMode() {
             <div className="flex gap-3">
               <div className="p-3 bg-gray-100 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
                 <div className="text-xs text-gray-600 dark:text-gray-500 mb-1">You Owe</div>
-                <div className="text-lg font-bold text-rose-600 dark:text-rose-400">{fmt(splits.filter(s=>!s.settled&&s.paidBy!=='Alex').reduce((sum,s)=>sum+(s.split['Alex']||0),0))}</div>
+                <div className="text-lg font-bold text-rose-600 dark:text-rose-400">{fmt(splits.filter(s=>!s.settled&&s.paidBy!==currentUserFirstName).reduce((sum,s)=>sum+(s.split[currentUserFirstName]||0),0))}</div>
               </div>
               <div className="p-3 bg-gray-100 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
                 <div className="text-xs text-gray-600 dark:text-gray-500 mb-1">Owed to You</div>
-                <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{fmt(splits.filter(s=>!s.settled&&s.paidBy==='Alex').reduce((sum,s)=>sum+s.amount-(s.split['Alex']||0),0))}</div>
+                <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400">{fmt(splits.filter(s=>!s.settled&&s.paidBy===currentUserFirstName).reduce((sum,s)=>sum+s.amount-(s.split[currentUserFirstName]||0),0))}</div>
               </div>
             </div>
             <button className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg transition-all flex items-center gap-2" onClick={()=>setShowSplit(true)}>
@@ -899,6 +1054,54 @@ export default function FamilyMode() {
             <div className="flex gap-3">
               <button className="flex-1 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-medium rounded-lg transition-all" onClick={handleConfirmRemove}>Remove</button>
               <button className="flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-lg transition-all" onClick={() => setConfirmRemove(null)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Update Progress Modal */}
+      {updateBudget && (
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/80 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 max-w-sm w-full animate-fadeIn shadow-2xl">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Add {updateBudget.isGoal ? 'Savings' : 'Expense'}</h3>
+              <button onClick={() => setUpdateBudget(null)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                <Icons.Close />
+              </button>
+            </div>
+            <div className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              Adding progress to <span className="font-bold text-gray-900 dark:text-gray-200">{updateBudget.name}</span>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Amount ($)</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">$</span>
+                  <input 
+                    className="w-full pl-8 pr-3 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:border-emerald-500 transition-all font-bold"
+                    type="number"
+                    autoFocus
+                    placeholder="0.00"
+                    value={updateAmount}
+                    onChange={e => setUpdateAmount(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleUpdateProgress()}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <button 
+                  className="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-sm transition-all"
+                  onClick={handleUpdateProgress}
+                >
+                  Update Budget
+                </button>
+                <button 
+                  className="px-4 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 font-bold rounded-lg transition-all"
+                  onClick={() => setUpdateBudget(null)}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         </div>

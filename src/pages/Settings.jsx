@@ -310,7 +310,7 @@ export default function Settings() {
             <div>
               <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Language</label>
               <select className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:border-emerald-500 transition-all" value={localUser.language} onChange={e=>set('language',e.target.value)}>
-                {['English','Spanish','French','German','Japanese','Korean','Chinese','Arabic'].map(l=><option key={l}>{l}</option>)}
+                {['English','Khmer','Spanish','French','German','Japanese','Korean','Chinese','Arabic'].map(l=><option key={l} value={l}>{l}</option>)}
               </select>
             </div>
             <div>

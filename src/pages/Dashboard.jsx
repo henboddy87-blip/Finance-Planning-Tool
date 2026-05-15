@@ -130,20 +130,30 @@ const ALL_WIDGETS = [
 ]
 
 /* Custom Tooltip */
+/* Custom Tooltip */
 const CT = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null
+  // Filter out duplicates (e.g. same data for Bar and Line)
+  const uniquePayload = payload.filter((item, index, self) => 
+    index === self.findIndex((t) => t.name === item.name)
+  )
+  
   return (
-    <div className="bg-gray-900 dark:bg-gray-800 border border-gray-700 rounded-lg p-3 shadow-lg">
-      <div className="text-gray-500 dark:text-gray-400 text-xs mb-1">{label}</div>
-      {payload.map((p, i) => (
-        <div key={i} className="flex items-center gap-2 text-xs">
-          <span className="w-2 h-2 rounded-full" style={{ background: p.color }} />
-          <span className="text-gray-600 dark:text-gray-400">{p.name}:</span>
-          <span className="text-gray-900 dark:text-gray-200 font-semibold">
-            {p.name === 'Savings Rate' ? `${p.value}%` : fmt(p.value)}
-          </span>
-        </div>
-      ))}
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-3 shadow-2xl ring-1 ring-black/5 dark:ring-white/5 animate-scaleIn min-w-[140px]">
+      <div className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2 border-b border-gray-100 dark:border-gray-800/50 pb-1.5">{label}</div>
+      <div className="space-y-2">
+        {uniquePayload.map((p, i) => (
+          <div key={i} className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full shadow-sm" style={{ background: p.color }} />
+              <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">{p.name}</span>
+            </div>
+            <span className="text-xs text-gray-900 dark:text-gray-100 font-bold">
+              {p.name.includes('Rate') ? `${p.value}%` : fmt(p.value)}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -297,7 +307,7 @@ export default function Dashboard({ onNavigate }) {
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-gray-700" />
               <XAxis dataKey="label" tick={{ fill: '#6b7280', fontSize: 11 }} axisLine={false} tickLine={false} className="dark:[&_tspan]:fill-gray-500" />
               <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => v >= 1000 ? `$${(v/1000).toFixed(0)}k` : `$${v}`} className="dark:[&_tspan]:fill-gray-500" />
-              <Tooltip content={<CT />} />
+              <Tooltip content={<CT />} contentStyle={{ backgroundColor: 'transparent', border: 'none' }} cursor={{ fill: 'rgba(0,0,0,0.05)' }} wrapperStyle={{ zIndex: 100 }} />
               <Bar dataKey="income" name="Income" fill="#10b981" radius={[4,4,0,0]} opacity={0.9} />
               <Bar dataKey="expenses" name="Expenses" fill="#f43f5e" radius={[4,4,0,0]} opacity={0.9} />
               <Line type="monotone" dataKey="income" stroke="#34d399" strokeWidth={2} dot={false} />
@@ -346,7 +356,7 @@ export default function Dashboard({ onNavigate }) {
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-gray-700" />
                   <XAxis dataKey="month" tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} className="dark:[&_tspan]:fill-gray-500" />
                   <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => `$${v/1000}k`} className="dark:[&_tspan]:fill-gray-500" />
-                  <Tooltip content={<CT />} />
+                  <Tooltip content={<CT />} contentStyle={{ backgroundColor: 'transparent', border: 'none' }} wrapperStyle={{ zIndex: 100 }} />
                   <Area type="monotone" dataKey="inflow" name="Inflow" stroke="#10b981" strokeWidth={2} fill="url(#inflowG)" />
                   <Area type="monotone" dataKey="outflow" name="Outflow" stroke="#f43f5e" strokeWidth={2} fill="url(#outflowG)" />
                   <Line type="monotone" dataKey="net" name="Net" stroke="#f59e0b" strokeWidth={2} dot={false} strokeDasharray="5 3" />
@@ -396,7 +406,7 @@ export default function Dashboard({ onNavigate }) {
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-gray-700" />
                   <XAxis dataKey="month" tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} className="dark:[&_tspan]:fill-gray-500" />
                   <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => `$${(v/1000).toFixed(0)}k`} className="dark:[&_tspan]:fill-gray-500" />
-                  <Tooltip content={<CT />} />
+                  <Tooltip content={<CT />} contentStyle={{ backgroundColor: 'transparent', border: 'none' }} wrapperStyle={{ zIndex: 100 }} />
                   <Area type="monotone" dataKey="net" name="Net Worth" stroke="#10b981" strokeWidth={2.5} fill="url(#nwG)" dot={{ r: 4, fill: '#10b981' }} />
                 </AreaChart>
               </ResponsiveContainer>
@@ -441,7 +451,7 @@ export default function Dashboard({ onNavigate }) {
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-gray-700" />
                   <XAxis dataKey="month" tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} className="dark:[&_tspan]:fill-gray-500" />
                   <YAxis tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => `${v}%`} domain={[0, 60]} className="dark:[&_tspan]:fill-gray-500" />
-                  <Tooltip content={<CT />} />
+                  <Tooltip content={<CT />} contentStyle={{ backgroundColor: 'transparent', border: 'none' }} wrapperStyle={{ zIndex: 100 }} />
                   <Area type="monotone" dataKey="rate" name="Savings Rate" stroke="#3b82f6" strokeWidth={2} fill="url(#srG)" dot={{ r: 4, fill: '#3b82f6' }} />
                 </AreaChart>
               </ResponsiveContainer>
@@ -485,7 +495,7 @@ export default function Dashboard({ onNavigate }) {
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" className="dark:stroke-gray-700" />
                   <XAxis dataKey="label" tick={{ fill: '#6b7280', fontSize: 11 }} axisLine={false} tickLine={false} className="dark:[&_tspan]:fill-gray-500" />
                   <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => v >= 1000 ? `$${v/1000}k` : `$${v}`} className="dark:[&_tspan]:fill-gray-500" />
-                  <Tooltip content={<CT />} />
+                  <Tooltip content={<CT />} contentStyle={{ backgroundColor: 'transparent', border: 'none' }} cursor={{ fill: 'rgba(0,0,0,0.05)' }} wrapperStyle={{ zIndex: 100 }} />
                   <Legend formatter={(v) => <span className="text-gray-600 dark:text-gray-400 text-xs capitalize">{v}</span>} />
                   <Bar dataKey="housing" name="Housing" stackId="a" fill="#3b82f6" />
                   <Bar dataKey="food" name="Food" stackId="a" fill="#f59e0b" />
@@ -517,7 +527,7 @@ export default function Dashboard({ onNavigate }) {
                   <Pie data={allocationData} cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3} dataKey="value">
                     {allocationData.map((_, i) => <Cell key={i} fill={COLORS[i]} />)}
                   </Pie>
-                  <Tooltip formatter={(v) => `${v}%`} contentStyle={{ background: '#1f2937', border: '1px solid #374151', borderRadius: '0.5rem', fontSize: '0.8rem' }} />
+                  <Tooltip content={<CT />} contentStyle={{ backgroundColor: 'transparent', border: 'none' }} wrapperStyle={{ zIndex: 100 }} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="space-y-2 mt-3">

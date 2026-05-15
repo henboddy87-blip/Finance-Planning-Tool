@@ -48,6 +48,20 @@ export default function Sidebar({ currentPage, onNavigate, isOpen, onToggle }) {
   const { isDark, toggleTheme } = useTheme()
   const { user, updateUser } = useUser()
 
+  const LANGUAGE_FLAGS = {
+    'English': 'us',
+    'Khmer': 'kh',
+    'Spanish': 'es',
+    'French': 'fr',
+    'German': 'de',
+    'Japanese': 'jp',
+    'Korean': 'kr',
+    'Chinese': 'cn',
+    'Arabic': 'sa'
+  }
+
+  const currentFlag = LANGUAGE_FLAGS[user?.language] || 'us'
+
   return (
     <aside className={`fixed top-0 left-0 h-screen flex flex-col z-[100] transition-all duration-300 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 ${isOpen ? 'w-[260px]' : 'w-[72px]'}`}>
       {/* Logo row */}
@@ -112,14 +126,18 @@ export default function Sidebar({ currentPage, onNavigate, isOpen, onToggle }) {
       <div className="p-4 border-t border-gray-100 dark:border-gray-800 flex flex-col gap-2">
         <button
           onClick={() => updateUser({ language: user?.language === 'Khmer' ? 'English' : 'Khmer' })}
-          className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-md transition-all text-gray-600 dark:text-gray-300"
+          className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-md transition-all text-gray-600 dark:text-gray-300 group"
         >
-          <span className="text-base shrink-0 flex items-center justify-center">
-            {user?.language === 'Khmer' ? '🇰🇭' : '🇺🇸'}
+          <span className="shrink-0 flex items-center justify-center overflow-hidden rounded-sm w-5 h-3.5 shadow-sm border border-gray-100 dark:border-gray-700 transition-transform group-hover:scale-110">
+            <img 
+              src={`https://flagcdn.com/w80/${currentFlag}.png`}
+              alt={user?.language}
+              className="w-full h-full object-cover"
+            />
           </span>
           {isOpen && (
             <span className="text-xs font-bold uppercase tracking-tight">
-              {user?.language === 'Khmer' ? 'Khmer' : 'English'}
+              {user?.language || 'English'}
             </span>
           )}
         </button>
