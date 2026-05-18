@@ -6,7 +6,7 @@ import StatCard from '../components/StatCard.jsx'
 import { fmt, fmtFull, COLORS } from '../utils/format.js'
 import { useToast } from '../context/AppContext.jsx'
 
-/* ── Data ─────────────────────────────────────────────── */
+// Initial data
 const initialBills = [
   { id:1,  name:'Mortgage',         category:'Housing',       amount:1850.00, dueDay:1,  freq:'Monthly',  autoPay:true,  status:'paid',    lastPaid:'Apr 1',  icon:'Home', color:'#4c7dc9' },
   { id:2,  name:'Electricity',      category:'Utilities',     amount:92.00,   dueDay:8,  freq:'Monthly',  autoPay:false, status:'due',     lastPaid:'Mar 8',  icon:'Zap', color:'#c9a84c' },
@@ -18,6 +18,7 @@ const initialBills = [
   { id:8,  name:'Property Tax',     category:'Housing',       amount:620.00,  dueDay:1,  freq:'Quarterly',autoPay:false, status:'upcoming',lastPaid:'Jan 1',  icon:'Building', color:'#4c7dc9' },
 ]
 
+// Initial subscription data
 const initialSubs = [
   { id:101, name:'Netflix',          category:'Entertainment', amount:15.99,  freq:'Monthly',  autoPay:true,  status:'active', nextDate:'May 3',  logo:'https://images.icon-icons.com/2699/PNG/512/netflix_logo_icon_170919.png', color:'#c94c4c',  since:'Jan 2021' },
   { id:102, name:'Spotify',          category:'Music',         amount:9.99,   freq:'Monthly',  autoPay:true,  status:'active', nextDate:'May 7',  logo:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Spotify_logo_without_text.svg/3840px-Spotify_logo_without_text.svg.png', color:'#1db954',  since:'Mar 2020' },
@@ -72,7 +73,7 @@ const Icons = {
   FileText: () => <FileText className="w-4 h-4" />,
 }
 
-/* ── Main ─────────────────────────────────────────────── */
+// Main Export
 export default function BillManager() {
   const toast = useToast()
   const [bills, setBills]       = useState(initialBills)

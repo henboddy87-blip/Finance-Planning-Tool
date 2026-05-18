@@ -8,7 +8,7 @@ import { useToast, useLocalStorage } from '../context/AppContext.jsx'
 const initialGoals = [
   { id: 1, name: 'Emergency Fund', target: 25000, current: 19500, monthly: 500, deadline: '2026-09', color: '#2a7d4f', category: 'Safety' },
   { id: 2, name: 'House Down Payment', target: 80000, current: 33600, monthly: 1200, deadline: '2028-06', color: '#c9a84c', category: 'Housing' },
-  { id: 3, name: 'Retirement (401k)', target: 1500000, current: 465000, monthly: 1800, deadline: '2045-01', color: '#4c7dc9', category: 'Retirement' },
+  { id: 3, name: 'Retirement', target: 1500000, current: 465000, monthly: 1800, deadline: '2045-01', color: '#4c7dc9', category: 'Retirement' },
   { id: 4, name: 'Dream Vacation', target: 8000, current: 3200, monthly: 300, deadline: '2026-12', color: '#c94c7d', category: 'Lifestyle' },
   { id: 5, name: "Children's Education", target: 120000, current: 24000, monthly: 600, deadline: '2036-08', color: '#7d4cc9', category: 'Education' },
 ]
@@ -95,7 +95,7 @@ export default function GoalsTracker() {
     setContribution('')
     setSelected(null)
     const finished = newCurrent >= (goal?.target || Infinity)
-    if (finished) toast.success('🎉 Goal Achieved!', `Congratulations! You reached your "${goal?.name}" goal!`)
+    if (finished) toast.success(' Goal Achieved!', `Congratulations! You reached your "${goal?.name}" goal!`)
     else toast.success('Contribution Added', `$${amt.toLocaleString()} added to "${goal?.name}".`)
   }
 
@@ -148,7 +148,7 @@ export default function GoalsTracker() {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Goal Name</label>
                 <input 
                   className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors"
-                  placeholder="e.g. Emergency Fund" 
+                  placeholder="Ex. Buying House" 
                   value={form.name} 
                   onChange={e => setForm(p => ({ ...p, name: e.target.value }))} 
                 />

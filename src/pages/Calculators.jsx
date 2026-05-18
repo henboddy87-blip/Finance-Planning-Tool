@@ -144,7 +144,7 @@ export default function Calculators() {
                     <input type="number" className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors" value={emiState.rate} onChange={e => setEmiState(p => ({ ...p, rate: parseFloat(e.target.value) }))} />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tenure (Years)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Duration (Years)</label>
                     <input type="number" className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors" value={emiState.years} onChange={e => setEmiState(p => ({ ...p, years: parseFloat(e.target.value) }))} />
                   </div>
                 </div>
@@ -168,7 +168,7 @@ export default function Calculators() {
                     <input type="number" className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors" value={savingsState.rate} onChange={e => setSavingsState(p => ({ ...p, rate: parseFloat(e.target.value) }))} />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time Period (Years)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Duration (Years)</label>
                     <input type="number" className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors" value={savingsState.years} onChange={e => setSavingsState(p => ({ ...p, years: parseFloat(e.target.value) }))} />
                   </div>
                 </div>
@@ -188,11 +188,11 @@ export default function Calculators() {
                     <input type="number" className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors" value={investState.monthly} onChange={e => setInvestState(p => ({ ...p, monthly: parseFloat(e.target.value) }))} />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Expected Return (CAGR %)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Expected Return (Rate %)</label>
                     <input type="number" className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors" value={investState.rate} onChange={e => setInvestState(p => ({ ...p, rate: parseFloat(e.target.value) }))} />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time Horizon (Years)</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Duration (Years)</label>
                     <input type="number" className="w-full px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors" value={investState.years} onChange={e => setInvestState(p => ({ ...p, years: parseFloat(e.target.value) }))} />
                   </div>
                 </div>

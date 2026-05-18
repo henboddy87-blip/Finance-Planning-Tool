@@ -125,7 +125,7 @@ export default function NetWorth() {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Name</label>
                 <input 
                   className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors"
-                  placeholder={showAdd === 'asset' ? 'e.g. Savings Account' : 'e.g. Car Loan'} 
+                  placeholder={showAdd === 'asset' ? 'Ex. Savings Account' : 'Ex. Car Loan'} 
                   value={form.name} 
                   onChange={e => setForm(p => ({ ...p, name: e.target.value }))} 
                 />

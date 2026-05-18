@@ -600,7 +600,7 @@ export default function Dashboard({ onNavigate }) {
                   onClick={() => onNavigate('budget')}
                   className="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                 >
-                  All <ChevronRight className="w-3 h-3" />
+                  All 
                 </button>
               </div>
               <div className="space-y-3">
@@ -638,7 +638,7 @@ export default function Dashboard({ onNavigate }) {
                   onClick={() => onNavigate('goals')}
                   className="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                 >
-                  All <ChevronRight className="w-3 h-3" />
+                  All 
                 </button>
               </div>
               <div className="space-y-4">

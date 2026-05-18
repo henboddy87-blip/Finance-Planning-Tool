@@ -78,16 +78,16 @@ function ToastContainer({ toasts, removeToast }) {
 }
 
 const DEFAULT_USER = {
-  name: 'Alex Johnson',
-  email: 'alex@wealthpath.com',
-  phone: '+1 (555) 012-3456',
-  currency: 'USD',
-  timezone: 'America/New_York',
+  name: 'Peter son',
+  email: 'peter@gmail.com',
+  phone: '+855 (097) 123 4567',
+  currency: 'KHR',
+  timezone: 'Asia/Phnom Penh',
   language: 'English',
   avatar: null,
   initials: 'AJ',
   plan: 'Free',
-  joinDate: 'January 2024',
+  joinDate: 'May 2026',
   notifications: {
     budgetAlerts: true, goalMilestones: true,
     weeklyReport: true, marketUpdates: false, taxReminders: true,

@@ -132,7 +132,7 @@ export default function TaxCalculator() {
           <div className="text-sm font-semibold text-gray-900 dark:text-gray-200 mb-4">Income Sources</div>
           <div className="space-y-3">
             {[
-              { label: 'W-2 Wages / Salary', key: 'wages' },
+              { label: 'Wages / Salary', key: 'wages' },
               { label: 'Self-Employment', key: 'selfEmployed' },
               { label: 'Interest Income', key: 'interest' },
               { label: 'Dividend Income', key: 'dividends' },
@@ -163,7 +163,7 @@ export default function TaxCalculator() {
             <div className={`font-semibold ${!useItemized ? 'text-emerald-700 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-500'}`}>{fmt(calc.standardDed)}</div>
           </div>
           <div className={`p-2 bg-gray-50 dark:bg-gray-900 rounded-lg mb-3 border ${useItemized ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 dark:border-emerald-500/50' : 'border-gray-300 dark:border-gray-700'}`}>
-            <div className="text-xs text-gray-600 dark:text-gray-500 mb-1">Itemized Total</div>
+            <div className="text-xs text-gray-600 dark:text-gray-500 mb-1">Itemized Deduction</div>
             <div className={`font-semibold ${useItemized ? 'text-emerald-700 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-500'}`}>{fmt(calc.itemizedDed)}</div>
           </div>
           <div className="space-y-3">
@@ -180,11 +180,11 @@ export default function TaxCalculator() {
               </div>
             ))}
             <div>
-              <label className="block text-xs font-medium text-gray-600 dark:text-gray-500 mb-1">401(k) / IRA Contribution</label>
+              <label className="block text-xs font-medium text-gray-600 dark:text-gray-500 mb-1"> Individual Retirement Account Contribution</label>
               <input className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors" type="number" value={retirement401k} onChange={e => setRetirement401k(parseFloat(e.target.value) || 0)} />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 dark:text-gray-500 mb-1">HSA Contribution</label>
+              <label className="block text-xs font-medium text-gray-600 dark:text-gray-500 mb-1"> Health Savings Account Contribution</label>
               <input className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-gray-900 dark:text-gray-200 focus:outline-none focus:border-emerald-500 transition-colors" type="number" value={hsaContrib} onChange={e => setHsaContrib(parseFloat(e.target.value) || 0)} />
             </div>
           </div>
