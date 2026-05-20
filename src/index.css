@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Kantumruy:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -6,12 +7,12 @@
   --color-accent-light: #3aaa6a;
   --color-accent-gold: #c9a84c;
   --color-accent-red: #c94c4c;
-  
+
   --color-bg: #0a0d14;
   --color-bg-card: #111520;
   --color-bg-card-alt: #161b28;
   --color-border: #1e2535;
-  
+
   --color-text-main: #e8e6e1;
   --color-text-muted: #8a8fa8;
   --color-text-faint: #4a5068;
@@ -22,12 +23,16 @@
 
 @layer base {
   /* Fix: Use m-0 and p-0. Box-border is applied directly. */
-  *, *::before, *::after { 
+  *,
+  *::before,
+  *::after {
     @apply m-0 p-0;
     box-sizing: border-box;
   }
-  
-  html { @apply scroll-smooth; }
+
+  html {
+    @apply scroll-smooth;
+  }
 
   body {
     /* Fix: duration-250 changed to 200 (standard scale) */
@@ -36,12 +41,22 @@
     color: var(--color-text-main);
   }
 
+  html.lang-kh,
+  html.lang-kh * {
+    font-family: "Kantumruy", "DM Sans", system-ui, sans-serif !important;
+  }
+
   /* Custom Scrollbar */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: var(--color-bg); }
-  ::-webkit-scrollbar-thumb { 
-    background: var(--color-accent); 
-    border-radius: 3px; 
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 3px;
   }
 }
 
@@ -52,7 +67,7 @@
     @apply bg-bg-card border border-border p-6 transition-all duration-200;
     border-radius: var(--radius-custom);
   }
-  
+
   .card-hover {
     @apply transition-all duration-200 hover:border-accent;
     &:hover {
@@ -65,11 +80,11 @@
     @apply inline-flex items-center gap-2 px-5 py-2.5 font-medium text-sm cursor-pointer transition-all duration-200 no-underline border-none;
     border-radius: var(--radius-custom-sm);
   }
-  
+
   .btn-primary {
     @apply bg-accent text-white hover:bg-accent-light hover:-translate-y-px;
   }
-  
+
   .btn-ghost {
     @apply bg-transparent text-text-muted border border-border hover:border-accent hover:text-accent-light;
   }
@@ -80,23 +95,25 @@
     border-radius: var(--radius-custom-sm);
     color: var(--color-text-main);
   }
-  
+
   .input:focus {
     @apply border-accent;
     box-shadow: 0 0 0 3px rgba(42, 125, 79, 0.15);
   }
-  
+
   .input-label {
     @apply block text-[0.72rem] font-semibold text-text-muted uppercase tracking-wider mb-1.5;
   }
 
   /* ─── Tables ─── */
-  .table-container { @apply w-full border-collapse text-sm; }
-  
+  .table-container {
+    @apply w-full border-collapse text-sm;
+  }
+
   .table-header {
     @apply text-left p-4 text-[0.7rem] font-bold uppercase tracking-wider text-text-muted border-b border-border;
   }
-  
+
   .table-cell {
     @apply p-4 border-b border-white/10 text-text-main;
   }
@@ -105,25 +122,47 @@
   .badge {
     @apply inline-flex items-center px-2.5 py-1 rounded-full text-[0.7rem] font-bold uppercase tracking-wider;
   }
-  
-  .badge-green { @apply bg-accent/20 text-accent-light; }
-  .badge-red   { @apply bg-red-500/20 text-red-400; }
-  .badge-gold  { @apply bg-accent-gold/20 text-accent-gold; }
+
+  .badge-green {
+    @apply bg-accent/20 text-accent-light;
+  }
+  .badge-red {
+    @apply bg-red-500/20 text-red-400;
+  }
+  .badge-gold {
+    @apply bg-accent-gold/20 text-accent-gold;
+  }
 }
 
 /* ─── Animations ─── */
 @keyframes toastIn {
-  from { opacity: 0; transform: translateX(40px) scale(0.92); }
-  to   { opacity: 1; transform: translateX(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateX(40px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.animate-toast { animation: toastIn 0.3s ease-out forwards; }
-.animate-fade { animation: fadeIn 0.4s ease-out forwards; }
+.animate-toast {
+  animation: toastIn 0.3s ease-out forwards;
+}
+.animate-fade {
+  animation: fadeIn 0.4s ease-out forwards;
+}
 
 /* ─── Form Elements Helpers ─── */
 input[type="range"] {
